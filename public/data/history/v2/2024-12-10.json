@@ -1,0 +1,495 @@
+{
+  "points": [
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:30:00.000Z",
+      "speed": 0,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:35:00.000Z",
+      "speed": 92,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:37:00.000Z",
+      "speed": 48,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:39:00.000Z",
+      "speed": 38,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:41:00.000Z",
+      "speed": 35,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:43:00.000Z",
+      "speed": 29,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:45:00.000Z",
+      "speed": 38,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:47:00.000Z",
+      "speed": 27,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:49:00.000Z",
+      "speed": 35,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:51:00.000Z",
+      "speed": 18,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:53:00.000Z",
+      "speed": 33,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:55:00.000Z",
+      "speed": 26,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:57:00.000Z",
+      "speed": 33,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T02:59:00.000Z",
+      "speed": 27,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:01:00.000Z",
+      "speed": 62,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:03:00.000Z",
+      "speed": 25,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:05:00.000Z",
+      "speed": 37,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:07:00.000Z",
+      "speed": 29,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:09:00.000Z",
+      "speed": 26,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:11:00.000Z",
+      "speed": 43,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:13:00.000Z",
+      "speed": 0,
+      "isStop": false
+    },
+    {
+      "lat": 18.922,
+      "lng": 72.8347,
+      "timestamp": "2024-12-10T03:37:00.000Z",
+      "speed": 0,
+      "isStop": false
+    },
+    {
+      "lat": 18.936815,
+      "lng": 72.84187,
+      "timestamp": "2024-12-10T03:42:00.000Z",
+      "speed": 49,
+      "isStop": false
+    },
+    {
+      "lat": 18.95163,
+      "lng": 72.84904,
+      "timestamp": "2024-12-10T03:44:00.000Z",
+      "speed": 50,
+      "isStop": false
+    },
+    {
+      "lat": 18.966445,
+      "lng": 72.85621,
+      "timestamp": "2024-12-10T03:46:00.000Z",
+      "speed": 44,
+      "isStop": false
+    },
+    {
+      "lat": 18.98126,
+      "lng": 72.86337999999999,
+      "timestamp": "2024-12-10T03:48:00.000Z",
+      "speed": 54,
+      "isStop": false
+    },
+    {
+      "lat": 18.996075,
+      "lng": 72.87055,
+      "timestamp": "2024-12-10T03:50:00.000Z",
+      "speed": 59,
+      "isStop": false
+    },
+    {
+      "lat": 19.01089,
+      "lng": 72.87772,
+      "timestamp": "2024-12-10T03:52:00.000Z",
+      "speed": 36,
+      "isStop": false
+    },
+    {
+      "lat": 19.025705,
+      "lng": 72.88489,
+      "timestamp": "2024-12-10T03:54:00.000Z",
+      "speed": 59,
+      "isStop": false
+    },
+    {
+      "lat": 19.04052,
+      "lng": 72.89206,
+      "timestamp": "2024-12-10T03:56:00.000Z",
+      "speed": 26,
+      "isStop": false
+    },
+    {
+      "lat": 19.055335,
+      "lng": 72.89923,
+      "timestamp": "2024-12-10T03:58:00.000Z",
+      "speed": 32,
+      "isStop": false
+    },
+    {
+      "lat": 19.070149999999998,
+      "lng": 72.90639999999999,
+      "timestamp": "2024-12-10T04:00:00.000Z",
+      "speed": 40,
+      "isStop": false
+    },
+    {
+      "lat": 19.084965,
+      "lng": 72.91356999999999,
+      "timestamp": "2024-12-10T04:02:00.000Z",
+      "speed": 65,
+      "isStop": false
+    },
+    {
+      "lat": 19.09978,
+      "lng": 72.92074,
+      "timestamp": "2024-12-10T04:04:00.000Z",
+      "speed": 99,
+      "isStop": false
+    },
+    {
+      "lat": 19.114595,
+      "lng": 72.92791,
+      "timestamp": "2024-12-10T04:06:00.000Z",
+      "speed": 40,
+      "isStop": false
+    },
+    {
+      "lat": 19.12941,
+      "lng": 72.93508,
+      "timestamp": "2024-12-10T04:08:00.000Z",
+      "speed": 32,
+      "isStop": false
+    },
+    {
+      "lat": 19.144225,
+      "lng": 72.94225,
+      "timestamp": "2024-12-10T04:10:00.000Z",
+      "speed": 57,
+      "isStop": false
+    },
+    {
+      "lat": 19.15904,
+      "lng": 72.94942,
+      "timestamp": "2024-12-10T04:12:00.000Z",
+      "speed": 65,
+      "isStop": false
+    },
+    {
+      "lat": 19.173855,
+      "lng": 72.95658999999999,
+      "timestamp": "2024-12-10T04:14:00.000Z",
+      "speed": 39,
+      "isStop": false
+    },
+    {
+      "lat": 19.18867,
+      "lng": 72.96376,
+      "timestamp": "2024-12-10T04:16:00.000Z",
+      "speed": 35,
+      "isStop": false
+    },
+    {
+      "lat": 19.203485,
+      "lng": 72.97093,
+      "timestamp": "2024-12-10T04:18:00.000Z",
+      "speed": 30,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:20:00.000Z",
+      "speed": 0,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:43:00.000Z",
+      "speed": 0,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:48:00.000Z",
+      "speed": 46,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:50:00.000Z",
+      "speed": 34,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:52:00.000Z",
+      "speed": 91,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:54:00.000Z",
+      "speed": 35,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:56:00.000Z",
+      "speed": 50,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T04:58:00.000Z",
+      "speed": 63,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:00:00.000Z",
+      "speed": 55,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:02:00.000Z",
+      "speed": 31,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:04:00.000Z",
+      "speed": 30,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:06:00.000Z",
+      "speed": 45,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:08:00.000Z",
+      "speed": 44,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:10:00.000Z",
+      "speed": 58,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:12:00.000Z",
+      "speed": 35,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:14:00.000Z",
+      "speed": 32,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:16:00.000Z",
+      "speed": 39,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:18:00.000Z",
+      "speed": 24,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:20:00.000Z",
+      "speed": 34,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:22:00.000Z",
+      "speed": 47,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:24:00.000Z",
+      "speed": 38,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:26:00.000Z",
+      "speed": 39,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:28:00.000Z",
+      "speed": 59,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:30:00.000Z",
+      "speed": 27,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:32:00.000Z",
+      "speed": 48,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:34:00.000Z",
+      "speed": 34,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:36:00.000Z",
+      "speed": 31,
+      "isStop": false
+    },
+    {
+      "lat": 19.2183,
+      "lng": 72.9781,
+      "timestamp": "2024-12-10T05:38:00.000Z",
+      "speed": 0,
+      "isStop": false
+    }
+  ],
+  "summary": {
+    "totalDistance": 36.2,
+    "drivingDuration": 126,
+    "idleDuration": 37,
+    "maxSpeed": 99,
+    "avgSpeed": 43,
+    "stops": 4
+  }
+}
