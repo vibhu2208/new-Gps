@@ -1,27 +1,40 @@
 /**
- * Convert Kadarpur CSV to routes.json format and MongoDB
- * 
- * Converts the Kadarpur GPS CSV to the JSON format expected by the dashboard
- * Also saves to MongoDB for database storage
+ * Restore HR26DP0703 data from all CSV files
  */
 
 const fs = require('fs');
 const path = require('path');
 const { MongoClient } = require('mongodb');
+require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
+if (!process.env.MONGODB_URI) {
+  require('dotenv').config({ path: path.join(__dirname, '../.env') });
+}
 
-const csvFilePath = path.join(__dirname, '../data/kadarpur_hr26dp0703_oct13_oct18_2025.csv');
-const outputFilePath = path.join(__dirname, '../public/data/routes.json');
+const uri = process.env.MONGODB_URI || 'mongodb+srv://krishnaupadhyay112211_db_user:Ram161003@gps-tracker.ozcq3tw.mongodb.net/';
+const dbName = process.env.MONGODB_DB_NAME || 'gps_tracker';
+
+// All CSV files for HR26DP0703
+const csvFiles = [
+  'kadarpur_hr26dp0703_aug25_sep5_2025.csv',
+  'kadarpur_hr26dp0703_sep6_sep18_2025.csv',
+  'kadarpur_hr26dp0703_sep19_sep22_2025.csv',
+  'kadarpur_hr26dp0703_sep23_oct12_2025.csv',
+  'kadarpur_hr26dp0703_oct13_oct18_2025.csv',
+  'kadarpur_hr26dp0703_oct19_oct23_2025.csv',
+  'kadarpur_hr26dp0703_oct24_nov11_2025.csv',
+  'kadarpur_hr26dp0703_nov12_nov29_2025.csv',
+  'kadarpur_hr26dp0703_nov30_dec2_2025.csv',
+  'kadarpur_hr26dp0703_dec3_dec15_2025.csv',
+  'kadarpur_hr26dp0703_dec15_dec25_2025.csv',
+];
 
 // Convert IST timestamp to UTC ISO string
 function istToUtc(istTimestamp) {
-  // IST is UTC+5:30
   const [datePart, timePart] = istTimestamp.split(' ');
   const [year, month, day] = datePart.split('-').map(Number);
   const [hour, minute, second] = timePart.split(':').map(Number);
   
-  // Create date in IST and convert to UTC by subtracting 5:30
   const istDate = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
-  // Subtract 5 hours 30 minutes to convert IST to UTC
   istDate.setUTCHours(istDate.getUTCHours() - 5);
   istDate.setUTCMinutes(istDate.getUTCMinutes() - 30);
   
@@ -30,42 +43,40 @@ function istToUtc(istTimestamp) {
 
 // Calculate distance between two points (Haversine formula)
 function calculateDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371; // Earth radius in km
+  const R = 6371; // Earth's radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLng = (lng2 - lng1) * Math.PI / 180;
   const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+  return R * c * 1000; // Distance in meters
 }
 
 // Calculate speed in km/h
-function calculateSpeed(lat1, lng1, lat2, lng2, timeDiffMinutes) {
-  if (timeDiffMinutes === 0) return 0;
-  const distance = calculateDistance(lat1, lng1, lat2, lng2);
-  const speed = (distance / timeDiffMinutes) * 60; // km/h
-  return Math.round(speed);
+function calculateSpeed(lat1, lng1, lat2, lng2, timeDiffMs) {
+  if (timeDiffMs === 0) return 0;
+  const distance = calculateDistance(lat1, lng1, lat2, lng2); // meters
+  const timeHours = timeDiffMs / (1000 * 60 * 60);
+  return distance / 1000 / timeHours; // km/h
 }
 
 async function saveToMongoDB(routes) {
-  const uri = 'mongodb+srv://krishnaupadhyay112211_db_user:Ram161003@gps-tracker.ozcq3tw.mongodb.net/';
-  const dbName = 'gps_tracker';
-  const client = new MongoClient(uri, { 
+  const client = new MongoClient(uri, {
     serverSelectionTimeoutMS: 10000,
-    connectTimeoutMS: 10000 
+    connectTimeoutMS: 10000,
   });
-  
+
   try {
     await client.connect();
     console.log('\n📦 Saving to MongoDB...');
-    
+
     const db = client.db(dbName);
     const routesCollection = db.collection('routes');
-    
+
     let totalPoints = 0;
     let totalDays = 0;
-    
+
     for (const [vehicleId, vehicleRoutes] of Object.entries(routes)) {
       for (const [date, routeData] of Object.entries(vehicleRoutes)) {
         const routeDoc = {
@@ -80,20 +91,20 @@ async function saveToMongoDB(routes) {
           },
           updatedAt: new Date()
         };
-        
+
         await routesCollection.updateOne(
           { vehicleId, date },
           { $set: routeDoc, $setOnInsert: { createdAt: new Date() } },
           { upsert: true }
         );
-        
+
         totalPoints += (routeData.points || []).length;
         totalDays++;
       }
     }
-    
+
     console.log(`✅ Saved ${totalDays} route days with ${totalPoints} total points to MongoDB`);
-    
+
   } catch (error) {
     console.error('❌ MongoDB save error:', error);
   } finally {
@@ -101,7 +112,7 @@ async function saveToMongoDB(routes) {
   }
 }
 
-function parseCSV() {
+function parseCSV(csvFilePath) {
   const csvContent = fs.readFileSync(csvFilePath, 'utf-8');
   const lines = csvContent.split('\n').filter(line => line.trim());
   
@@ -117,7 +128,7 @@ function parseCSV() {
     const timestamp = parts[0];
     const vehicle = parts[1];
     const ward = parts[2];
-    const phase = parts[3]; // TRAVEL_OUT, WORKING, BREAK, TRAVEL_BACK
+    const phase = parts[3];
     const locationName = parts[4];
     const latitude = parseFloat(parts[5]);
     const longitude = parseFloat(parts[6]);
@@ -141,10 +152,8 @@ function parseCSV() {
       };
     }
     
-    // Determine if point is a stop based on phase
     const isStop = phase === 'BREAK' || phase === 'WORKING';
     
-    // Map phase to status for compatibility
     let status = phase;
     if (phase === 'TRAVEL_OUT') status = 'TRAVEL_OUT';
     else if (phase === 'TRAVEL_BACK') status = 'TRAVEL_BACK';
@@ -155,7 +164,7 @@ function parseCSV() {
       lat: latitude,
       lng: longitude,
       timestamp: isoTimestamp,
-      speed: 0, // Will be calculated later
+      speed: 0,
       location: locationName,
       status: status,
       phase: phase,
@@ -167,7 +176,6 @@ function parseCSV() {
   for (const vehicle in routes) {
     for (const date in routes[vehicle]) {
       const points = routes[vehicle][date].points;
-      
       let totalDistance = 0;
       let drivingDuration = 0;
       let idleDuration = 0;
@@ -177,92 +185,76 @@ function parseCSV() {
         const prev = points[i - 1];
         const curr = points[i];
         
-        // Calculate distance
+        const prevTime = new Date(prev.timestamp);
+        const currTime = new Date(curr.timestamp);
+        const timeDiff = currTime - prevTime;
+        
         const distance = calculateDistance(prev.lat, prev.lng, curr.lat, curr.lng);
-        totalDistance += distance;
-        
-        // Calculate time difference in minutes
-        const timeDiff = (new Date(curr.timestamp).getTime() - new Date(prev.timestamp).getTime()) / (1000 * 60);
-        
-        // Calculate speed
         const speed = calculateSpeed(prev.lat, prev.lng, curr.lat, curr.lng, timeDiff);
+        
         curr.speed = speed;
+        totalDistance += distance;
+        maxSpeed = Math.max(maxSpeed, speed);
         
-        if (speed > maxSpeed) {
-          maxSpeed = speed;
-        }
-        
-        // Determine if moving or idle based on speed and phase
-        if (curr.phase === 'TRAVEL_OUT' || curr.phase === 'TRAVEL_BACK') {
+        if (speed > 1) {
           drivingDuration += timeDiff;
-        } else if (curr.phase === 'WORKING') {
-          // Working can have some movement, but mostly idle
-          if (speed > 5) {
-            drivingDuration += timeDiff;
-          } else {
-            idleDuration += timeDiff;
-          }
-        } else if (curr.phase === 'BREAK') {
-          idleDuration += timeDiff;
         } else {
-          // Default: if speed > 5 km/h, consider it driving
-          if (speed > 5) {
-            drivingDuration += timeDiff;
-          } else {
-            idleDuration += timeDiff;
-          }
+          idleDuration += timeDiff;
         }
       }
       
       routes[vehicle][date].summary = {
-        totalDistance: parseFloat(totalDistance.toFixed(2)),
-        drivingDuration: Math.round(drivingDuration),
-        idleDuration: Math.round(idleDuration),
+        totalDistance: Math.round(totalDistance),
+        drivingDuration: Math.round(drivingDuration / 1000),
+        idleDuration: Math.round(idleDuration / 1000),
         maxSpeed: Math.round(maxSpeed)
       };
     }
   }
   
-  // Read existing routes.json if it exists and merge
-  let existingRoutes = {};
-  if (fs.existsSync(outputFilePath)) {
-    try {
-      const existingContent = fs.readFileSync(outputFilePath, 'utf-8');
-      existingRoutes = JSON.parse(existingContent);
-    } catch (error) {
-      console.warn('Could not read existing routes.json, creating new file');
+  return routes;
+}
+
+async function main() {
+  const dataDir = path.join(__dirname, '../data');
+  const allRoutes = {};
+  
+  console.log('🔄 Restoring HR26DP0703 data from CSV files...\n');
+  
+  for (const csvFile of csvFiles) {
+    const csvPath = path.join(dataDir, csvFile);
+    if (fs.existsSync(csvPath)) {
+      console.log(`📄 Processing ${csvFile}...`);
+      const routes = parseCSV(csvPath);
+      
+      // Merge into allRoutes
+      for (const vehicle in routes) {
+        if (!allRoutes[vehicle]) {
+          allRoutes[vehicle] = {};
+        }
+        for (const date in routes[vehicle]) {
+          allRoutes[vehicle][date] = routes[vehicle][date];
+        }
+      }
+    } else {
+      console.log(`⚠️  File not found: ${csvFile}`);
     }
   }
   
-  // Merge new routes with existing routes
-  for (const vehicle in routes) {
-    if (!existingRoutes[vehicle]) {
-      existingRoutes[vehicle] = {};
-    }
-    // Merge dates
-    for (const date in routes[vehicle]) {
-      existingRoutes[vehicle][date] = routes[vehicle][date];
-    }
-  }
-  
-  // Ensure directory exists
-  const outputDir = path.dirname(outputFilePath);
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-  }
-  
-  fs.writeFileSync(outputFilePath, JSON.stringify(existingRoutes, null, 2));
-  console.log(`✅ Routes data generated successfully at ${outputFilePath}`);
-  console.log(`📊 Total vehicles: ${Object.keys(existingRoutes).length}`);
-  
-  for (const vehicle in routes) {
-    const dates = Object.keys(routes[vehicle]);
-    console.log(`🚗 Vehicle ${vehicle}: ${dates.length} days of data (${dates[0]} to ${dates[dates.length - 1]})`);
+  console.log(`\n✅ Parsed ${Object.keys(allRoutes).length} vehicle(s)`);
+  for (const vehicle in allRoutes) {
+    const dates = Object.keys(allRoutes[vehicle]).sort();
+    console.log(`   ${vehicle}: ${dates.length} days (${dates[0]} to ${dates[dates.length - 1]})`);
   }
   
   // Save to MongoDB
-  saveToMongoDB(existingRoutes);
+  await saveToMongoDB(allRoutes);
+  
+  console.log('\n✨ Restoration complete!');
 }
 
-parseCSV();
+main().catch(error => {
+  console.error('❌ Error:', error);
+  process.exit(1);
+});
 
