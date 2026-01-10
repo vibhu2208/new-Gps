@@ -18,165 +18,123 @@ if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN && !process.env.MAPBOX_ACCESS_TOKEN) {
 // Localities with their depots and streets
 const LOCALITIES = [
   {
-    name: 'sector 102',
-    depot: { lat: 28.476473, lng: 76.979331 },
+    name: 'Dayanand Colony',
+    depot: { lat: 28.47412877242752, lng: 77.02091658834189 },
     streets: [
-      { id: 'S1', lat: 28.480735, lng: 76.970241, name: 'Street 1' },
-      { id: 'S2', lat: 28.479129, lng: 76.967758, name: 'Street 2' },
-      { id: 'S3', lat: 28.477626, lng: 76.970678, name: 'Street 3' },
-      { id: 'S4', lat: 28.478675, lng: 76.975148, name: 'Street 4' },
-      { id: 'S5', lat: 28.475739, lng: 76.972631, name: 'Street 5' },
-      { id: 'S6', lat: 28.473576, lng: 76.965170, name: 'Street 6' },
-      { id: 'S7', lat: 28.470872, lng: 76.973101, name: 'Street 7' },
+      { id: 'S1', lat: 28.474498882392133, lng: 77.02033873837613, name: 'Street 1' },
+      { id: 'S2', lat: 28.474741614193103, lng: 77.01978687049991, name: 'Street 2' },
+      { id: 'S3', lat: 28.47430167947464, lng: 77.01954440293595, name: 'Street 3' },
+      { id: 'S4', lat: 28.473820754948523, lng: 77.01920867861438, name: 'Street 4' },
+      { id: 'S5', lat: 28.473135980864757, lng: 77.02070342686805, name: 'Street 5' },
+      { id: 'S6', lat: 28.472242257984227, lng: 77.02313696585111, name: 'Street 6' },
+      { id: 'S7', lat: 28.471807964332605, lng: 77.02299868380054, name: 'Street 7' },
     ]
   },
   {
-    name: 'sector 102A',
-    depot: { lat: 28.461675, lng: 76.991388 },
+    name: 'Ashok Puri',
+    depot: { lat: 28.473167918418408, lng: 77.02264044813549 },
     streets: [
-      { id: 'S1', lat: 28.465810, lng: 76.989801, name: 'Street 1' },
-      { id: 'S2', lat: 28.467147, lng: 76.996062, name: 'Street 2' },
-      { id: 'S3', lat: 28.459536, lng: 76.992764, name: 'Street 3' },
-      { id: 'S4', lat: 28.461144, lng: 77.000184, name: 'Street 4' },
-      { id: 'S5', lat: 28.467762, lng: 76.998138, name: 'Street 5' },
+      { id: 'S1', lat: 28.47208114940716, lng: 77.02087044604599, name: 'Street 1' },
+      { id: 'S2', lat: 28.472199494586384, lng: 77.02113874347866, name: 'Street 2' },
+      { id: 'S3', lat: 28.47194820727614, lng: 77.02202715929239, name: 'Street 3' },
+      { id: 'S4', lat: 28.473138121326027, lng: 77.02248678136188, name: 'Street 4' },
+      { id: 'S5', lat: 28.47332042581226, lng: 77.02296602142714, name: 'Street 5' },
+      { id: 'S6', lat: 28.472881909092372, lng: 77.02323787107417, name: 'Street 6' },
+      { id: 'S7', lat: 28.471580161768482, lng: 77.02175406933338, name: 'Street 7' },
     ]
   },
   {
-    name: 'sector 103',
-    depot: { lat: 28.488167, lng: 76.976747 },
+    name: 'Mahavir Pura',
+    depot: { lat: 28.469469345926893, lng: 77.02496258336024 },
     streets: [
-      { id: 'S1', lat: 28.497137, lng: 76.977745, name: 'Street 1' },
-      { id: 'S2', lat: 28.493740, lng: 76.984200, name: 'Street 2' },
-      { id: 'S3', lat: 28.500161, lng: 76.991966, name: 'Street 3' },
-      { id: 'S4', lat: 28.496745, lng: 76.993374, name: 'Street 4' },
-      { id: 'S5', lat: 28.492430, lng: 76.992576, name: 'Street 5' },
-      { id: 'S6', lat: 28.493627, lng: 76.996780, name: 'Street 6' },
+      { id: 'S1', lat: 28.470488182062027, lng: 77.0250847994533, name: 'Street 1' },
+      { id: 'S2', lat: 28.469469594560703, lng: 77.02477366320846, name: 'Street 2' },
+      { id: 'S3', lat: 28.468977475421998, lng: 77.02546338847682, name: 'Street 3' },
+      { id: 'S4', lat: 28.469356984905968, lng: 77.02562332060585, name: 'Street 4' },
     ]
   },
   {
-    name: 'sector 106',
-    depot: { lat: 28.500861, lng: 77.002916 },
+    name: 'Jawahar Nagar',
+    depot: { lat: 28.46446870594227, lng: 77.02885741473166 },
     streets: [
-      { id: 'S1', lat: 28.504906, lng: 77.000333, name: 'Street 1' },
-      { id: 'S2', lat: 28.502240, lng: 76.998500, name: 'Street 2' },
-      { id: 'S3', lat: 28.497846, lng: 76.997619, name: 'Street 3' },
-      { id: 'S4', lat: 28.495628, lng: 76.999762, name: 'Street 4' },
-      { id: 'S5', lat: 28.494354, lng: 76.997641, name: 'Street 5' },
+      { id: 'S1', lat: 28.46598199872933, lng: 77.02739836879847, name: 'Street 1' },
+      { id: 'S2', lat: 28.465396525191203, lng: 77.02647082113988, name: 'Street 2' },
+      { id: 'S3', lat: 28.465984688852988, lng: 77.02613933727018, name: 'Street 3' },
+      { id: 'S4', lat: 28.466567502342862, lng: 77.02703647249761, name: 'Street 4' },
+      { id: 'S5', lat: 28.467056742381942, lng: 77.02656205522068, name: 'Street 5' },
+      { id: 'S6', lat: 28.46532561785404, lng: 77.02766700137252, name: 'Street 6' },
     ]
   },
   {
-    name: 'sector 107',
-    depot: { lat: 28.511190, lng: 76.973801 },
+    name: 'Subhash Nagar',
+    depot: { lat: 28.467961437816648, lng: 77.02205510378629 },
     streets: [
-      { id: 'S1', lat: 28.511995, lng: 76.970929, name: 'Street 1' },
-      { id: 'S2', lat: 28.510619, lng: 76.975023, name: 'Street 2' },
-      { id: 'S3', lat: 28.504530, lng: 76.972758, name: 'Street 3' },
-      { id: 'S4', lat: 28.502099, lng: 76.978138, name: 'Street 4' },
-      { id: 'S5', lat: 28.498295, lng: 76.973690, name: 'Street 5' },
+      { id: 'S1', lat: 28.468423029786617, lng: 77.02391501056451, name: 'Street 1' },
+      { id: 'S2', lat: 28.46853917003371, lng: 77.02432602476141, name: 'Street 2' },
+      { id: 'S3', lat: 28.46716811114602, lng: 77.02298289632589, name: 'Street 3' },
+      { id: 'S4', lat: 28.4677308245005, lng: 77.02542984825888, name: 'Street 4' },
+      { id: 'S5', lat: 28.46444238955026, lng: 77.02347518646481, name: 'Street 5' },
+      { id: 'S6', lat: 28.463906851433407, lng: 77.02384216143686, name: 'Street 6' },
+      { id: 'S7', lat: 28.46359068910018, lng: 77.02324766197788, name: 'Street 7' },
     ]
   },
   {
-    name: 'sector 108',
-    depot: { lat: 28.516747, lng: 76.975438 },
+    name: 'Prem Nagar',
+    depot: { lat: 28.468639357981758, lng: 77.0362563018178 },
     streets: [
-      { id: 'S1', lat: 28.517790, lng: 76.974410, name: 'Street 1' },
-      { id: 'S2', lat: 28.516182, lng: 76.975787, name: 'Street 2' },
-      { id: 'S3', lat: 28.517285, lng: 76.980121, name: 'Street 3' },
-      { id: 'S4', lat: 28.512962, lng: 76.979853, name: 'Street 4' },
-      { id: 'S5', lat: 28.510919, lng: 76.982279, name: 'Street 5' },
-      { id: 'S6', lat: 28.514862, lng: 76.984136, name: 'Street 6' },
+      { id: 'S1', lat: 28.46902787354673, lng: 77.03518400338533, name: 'Street 1' },
+      { id: 'S2', lat: 28.468475941466334, lng: 77.03450684387467, name: 'Street 2' },
+      { id: 'S3', lat: 28.46837187122948, lng: 77.03577243225233, name: 'Street 3' },
+      { id: 'S4', lat: 28.467786350018223, lng: 77.03578445498174, name: 'Street 4' },
+      { id: 'S5', lat: 28.467302288508932, lng: 77.03483706390072, name: 'Street 5' },
+      { id: 'S6', lat: 28.46658374488699, lng: 77.03467747717124, name: 'Street 6' },
     ]
   },
   {
-    name: 'sector 109',
-    depot: { lat: 28.506467, lng: 77.003612 },
+    name: 'NAI BASTI',
+    depot: { lat: 28.460760951251604, lng: 77.02175016050151 },
     streets: [
-      { id: 'S1', lat: 28.507086, lng: 77.003281, name: 'Street 1' },
-      { id: 'S2', lat: 28.509545, lng: 77.007672, name: 'Street 2' },
-      { id: 'S3', lat: 28.511732, lng: 77.011280, name: 'Street 3' },
-      { id: 'S4', lat: 28.512508, lng: 77.014009, name: 'Street 4' },
-      { id: 'S5', lat: 28.508295, lng: 77.012206, name: 'Street 5' },
-      { id: 'S6', lat: 28.504657, lng: 77.007665, name: 'Street 6' },
+      { id: 'S1', lat: 28.46011830448518, lng: 77.02265243337187, name: 'Street 1' },
+      { id: 'S2', lat: 28.459687990209236, lng: 77.022734569761, name: 'Street 2' },
+      { id: 'S3', lat: 28.460617879477905, lng: 77.02360957372886, name: 'Street 3' },
+      { id: 'S4', lat: 28.460673878892724, lng: 77.02287034625475, name: 'Street 4' },
+      { id: 'S5', lat: 28.46001071954111, lng: 77.02223396420597, name: 'Street 5' },
     ]
   },
   {
-    name: 'village daultabad',
-    depot: { lat: 28.503150, lng: 76.993101 },
+    name: 'pratap nagar',
+    depot: { lat: 28.4648746706228, lng: 77.02107583915402 },
     streets: [
-      { id: 'S1', lat: 28.503145, lng: 76.992658, name: 'Street 1' },
-      { id: 'S2', lat: 28.500652, lng: 76.994119, name: 'Street 2' },
-      { id: 'S3', lat: 28.499492, lng: 76.992101, name: 'Street 3' },
-      { id: 'S4', lat: 28.498465, lng: 76.993953, name: 'Street 4' },
-      { id: 'S5', lat: 28.497242, lng: 76.991575, name: 'Street 5' },
-      { id: 'S6', lat: 28.496635, lng: 76.993558, name: 'Street 6' },
+      { id: 'S1', lat: 28.464343541849658, lng: 77.0212128290625, name: 'Street 1' },
+      { id: 'S2', lat: 28.4647239143059, lng: 77.02027804106883, name: 'Street 2' },
+      { id: 'S3', lat: 28.463882910176704, lng: 77.02017021258341, name: 'Street 3' },
+      { id: 'S4', lat: 28.46323877744549, lng: 77.02149794213716, name: 'Street 4' },
+      { id: 'S5', lat: 28.462779690435532, lng: 77.02048486262336, name: 'Street 5' },
     ]
   },
   {
-    name: 'village pawal khusurpur',
-    depot: { lat: 28.499789, lng: 77.012335 },
+    name: 'Rattan Garden',
+    depot: { lat: 28.4691504189515, lng: 77.01949372654398 },
     streets: [
-      { id: 'S1', lat: 28.514017, lng: 77.012240, name: 'Street 1' },
-      { id: 'S2', lat: 28.510990, lng: 77.009258, name: 'Street 2' },
-      { id: 'S3', lat: 28.510140, lng: 77.014195, name: 'Street 3' },
-      { id: 'S4', lat: 28.508154, lng: 77.006704, name: 'Street 4' },
-      { id: 'S5', lat: 28.505870, lng: 77.008679, name: 'Street 5' },
-      { id: 'S6', lat: 28.505747, lng: 77.004945, name: 'Street 6' },
+      { id: 'S1', lat: 28.468904191855515, lng: 77.01960865663469, name: 'Street 1' },
+      { id: 'S2', lat: 28.468430692563885, lng: 77.01881081834978, name: 'Street 2' },
+      { id: 'S3', lat: 28.467853497932726, lng: 77.01862151262476, name: 'Street 3' },
+      { id: 'S4', lat: 28.46741957658694, lng: 77.01874694034156, name: 'Street 4' },
+      { id: 'S5', lat: 28.46769302818058, lng: 77.01983228059, name: 'Street 5' },
+      { id: 'S6', lat: 28.467562274727317, lng: 77.02022509314963, name: 'Street 6' },
     ]
   },
   {
-    name: 'village kherki majra',
-    depot: { lat: 28.490096, lng: 76.970915 },
+    name: 'Bhim Nagar',
+    depot: { lat: 28.470401969689693, lng: 77.02120427195605 },
     streets: [
-      { id: 'S1', lat: 28.496640, lng: 76.963714, name: 'Street 1' },
-      { id: 'S2', lat: 28.490657, lng: 76.961222, name: 'Street 2' },
-      { id: 'S3', lat: 28.487572, lng: 76.962615, name: 'Street 3' },
-      { id: 'S4', lat: 28.485476, lng: 76.965751, name: 'Street 4' },
-      { id: 'S5', lat: 28.484439, lng: 76.972182, name: 'Street 5' },
-      { id: 'S6', lat: 28.486159, lng: 76.981669, name: 'Street 6' },
-    ]
-  },
-  {
-    name: 'village mohammadheri',
-    depot: { lat: 28.505521, lng: 76.989111 },
-    streets: [
-      { id: 'S1', lat: 28.506649, lng: 76.987242, name: 'Street 1' },
-      { id: 'S2', lat: 28.504952, lng: 76.990750, name: 'Street 2' },
-      { id: 'S3', lat: 28.502671, lng: 76.990857, name: 'Street 3' },
-      { id: 'S4', lat: 28.501153, lng: 76.989377, name: 'Street 4' },
-    ]
-  },
-  {
-    name: 'village dhankot',
-    depot: { lat: 28.471169, lng: 76.959534 },
-    streets: [
-      { id: 'S1', lat: 28.475006, lng: 76.956308, name: 'Street 1' },
-      { id: 'S2', lat: 28.474820, lng: 76.959153, name: 'Street 2' },
-      { id: 'S3', lat: 28.473463, lng: 76.956874, name: 'Street 3' },
-      { id: 'S4', lat: 28.472509, lng: 76.959254, name: 'Street 4' },
-      { id: 'S5', lat: 28.471611, lng: 76.956960, name: 'Street 5' },
-    ]
-  },
-  {
-    name: 'village babupur',
-    depot: { lat: 28.508687, lng: 76.988604 },
-    streets: [
-      { id: 'S1', lat: 28.506634, lng: 76.990028, name: 'Street 1' },
-      { id: 'S2', lat: 28.506924, lng: 76.994640, name: 'Street 2' },
-      { id: 'S3', lat: 28.510244, lng: 76.997235, name: 'Street 3' },
-      { id: 'S4', lat: 28.510281, lng: 77.004445, name: 'Street 4' },
-      { id: 'S5', lat: 28.514411, lng: 76.999338, name: 'Street 5' },
-    ]
-  },
-  {
-    name: 'village dharampur',
-    depot: { lat: 28.512461, lng: 76.976375 },
-    streets: [
-      { id: 'S1', lat: 28.516667, lng: 76.974154, name: 'Street 1' },
-      { id: 'S2', lat: 28.518058, lng: 76.980039, name: 'Street 2' },
-      { id: 'S3', lat: 28.511648, lng: 76.977665, name: 'Street 3' },
-      { id: 'S4', lat: 28.514625, lng: 76.980509, name: 'Street 4' },
-      { id: 'S5', lat: 28.510986, lng: 76.982263, name: 'Street 5' },
-      { id: 'S6', lat: 28.510748, lng: 76.987867, name: 'Street 6' },
+      { id: 'S1', lat: 28.472251415345994, lng: 77.01943919274532, name: 'Street 1' },
+      { id: 'S2', lat: 28.47179193830884, lng: 77.02027465147577, name: 'Street 2' },
+      { id: 'S3', lat: 28.47125936587641, lng: 77.0201270464293, name: 'Street 3' },
+      { id: 'S4', lat: 28.471069245042212, lng: 77.02077916901695, name: 'Street 4' },
+      { id: 'S5', lat: 28.470067970251637, lng: 77.02136902204867, name: 'Street 5' },
+      { id: 'S6', lat: 28.470027882925432, lng: 77.02184133003257, name: 'Street 6' },
+      { id: 'S7', lat: 28.469240450343396, lng: 77.02072407735977, name: 'Street 7' },
     ]
   },
 ];
@@ -184,8 +142,8 @@ const LOCALITIES = [
 // Configuration
 const CONFIG = {
   MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN || process.env.MAPBOX_ACCESS_TOKEN,
-  VEHICLE: 'HR76C0880',
-  WARD: '6',
+  VEHICLE: 'HR26ED7915',
+  WARD: '31',
   START_DATE: new Date('2025-08-25'),
   END_DATE: new Date('2025-12-24'),
   WORK_START: 9, // 09:00
@@ -1041,9 +999,9 @@ function writeCSV(rows, outputPath) {
 
 // Main execution
 async function main() {
-  const outputPath = path.join(__dirname, '../data/ward6_hr76c0880_aug25_dec24_2025.csv');
+  const outputPath = path.join(__dirname, '../data/ward31_hr26ed7915_aug25_dec24_2025.csv');
 
-  console.log('🚀 Generating GPS data for JCB HR76C0880 in Ward 6...');
+  console.log('🚀 Generating GPS data for JCB HR26ED7915 in Ward 31...');
   console.log(`📅 Date range: ${CONFIG.START_DATE.toISOString().split('T')[0]} to ${CONFIG.END_DATE.toISOString().split('T')[0]}`);
   console.log(`📍 Ward: ${CONFIG.WARD}`);
   console.log(`🏭 Localities: ${LOCALITIES.length}`);

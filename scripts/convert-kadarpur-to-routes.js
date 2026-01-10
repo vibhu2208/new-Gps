@@ -14,7 +14,7 @@ if (!process.env.MONGODB_URI) {
   require('dotenv').config({ path: path.join(__dirname, '../.env') });
 }
 
-const csvFilePath = path.join(__dirname, '../data/ward17_hr26de7343_aug25_dec24_2025.csv');
+const csvFilePath = path.join(__dirname, '../data/ward31_hr26ed7915_aug25_dec24_2025.csv');
 const outputFilePath = path.join(__dirname, '../public/data/routes.json');
 
 // Convert IST timestamp to UTC ISO string
@@ -251,14 +251,8 @@ function parseCSV() {
     }
   }
   
-  // Ensure directory exists
-  const outputDir = path.dirname(outputFilePath);
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
-  }
-  
-  fs.writeFileSync(outputFilePath, JSON.stringify(existingRoutes, null, 2));
-  console.log(`✅ Routes data generated successfully at ${outputFilePath}`);
+  // Skip JSON file write if it's too large - save directly to MongoDB
+  // The JSON file can become too large with many routes
   console.log(`📊 Total vehicles: ${Object.keys(existingRoutes).length}`);
   
   for (const vehicle in routes) {
@@ -266,8 +260,8 @@ function parseCSV() {
     console.log(`🚗 Vehicle ${vehicle}: ${dates.length} days of data (${dates[0]} to ${dates[dates.length - 1]})`);
   }
   
-  // Save to MongoDB
-  saveToMongoDB(existingRoutes);
+  // Save to MongoDB (only save the new routes, not all existing routes)
+  saveToMongoDB(routes);
 }
 
 parseCSV();
