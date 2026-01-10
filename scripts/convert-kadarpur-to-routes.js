@@ -14,7 +14,7 @@ if (!process.env.MONGODB_URI) {
   require('dotenv').config({ path: path.join(__dirname, '../.env') });
 }
 
-const csvFilePath = path.join(__dirname, '../data/ward7_rj05ea2152_aug25_dec24_2025.csv');
+const csvFilePath = path.join(__dirname, '../data/ward17_hr26de7343_aug25_dec24_2025.csv');
 const outputFilePath = path.join(__dirname, '../public/data/routes.json');
 
 // Convert IST timestamp to UTC ISO string
@@ -77,6 +77,7 @@ async function saveToMongoDB(routes) {
           vehicleId,
           date,
           points: routeData.points || [],
+          locality: routeData.locality || null,
           summary: routeData.summary || {
             totalDistance: 0,
             drivingDuration: 0,

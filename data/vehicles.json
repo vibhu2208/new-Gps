@@ -336,5 +336,44 @@
     "city": "Gurugram",
     "ward": "7",
     "location": "Sector -104"
+  },
+  {
+    "id": "HR74A3165",
+    "name": "JCB HR74A3165",
+    "plateNumber": "HR74A3165",
+    "status": "idle",
+    "lastSeen": "2025-12-24T17:00:00Z",
+    "driver": "Ward 11 Operator",
+    "model": "JCB 3DX",
+    "color": "Yellow",
+    "city": "Gurugram",
+    "ward": "11",
+    "location": "sector 33"
+  },
+  {
+    "id": "HR72J4371",
+    "name": "JCB HR72J4371",
+    "plateNumber": "HR72J4371",
+    "status": "idle",
+    "lastSeen": "2025-12-24T17:00:00Z",
+    "driver": "Ward 18 Operator",
+    "model": "JCB 3DX",
+    "color": "Yellow",
+    "city": "Gurugram",
+    "ward": "18",
+    "location": "SushantLok Phase -I Block A"
+  },
+  {
+    "id": "HR26DE7343",
+    "name": "JCB HR26DE7343",
+    "plateNumber": "HR26DE7343",
+    "status": "idle",
+    "lastSeen": "2025-12-24T17:00:00Z",
+    "driver": "Ward 17 Operator",
+    "model": "JCB 3DX",
+    "color": "Yellow",
+    "city": "Gurugram",
+    "ward": "17",
+    "location": "Mohammadpur Jharsa"
   }
 ]
