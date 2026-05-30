@@ -13,15 +13,6 @@ export default function DashboardPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState<string>('');
-
-  useEffect(() => {
-    const updateTime = () => setLastUpdated(new Date().toLocaleTimeString());
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -96,12 +87,6 @@ export default function DashboardPage() {
             <MapPin className="w-4 h-4" />
             Monitor your fleet in real-time
           </p>
-        </div>
-        <div className="hidden md:flex items-center gap-3">
-          <div className="px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-            <p className="text-xs text-gray-600 font-medium">Last Updated</p>
-            <p className="text-sm font-semibold text-gray-900">{lastUpdated || '—'}</p>
-          </div>
         </div>
       </div>
 

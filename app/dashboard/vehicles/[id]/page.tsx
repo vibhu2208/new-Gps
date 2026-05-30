@@ -212,6 +212,7 @@ export default function VehicleDetailPage() {
                       showPlayback={true}
                       overspeedThreshold={80}
                       vehicleNumber={vehicle.plateNumber}
+                      siteName={vehicle.city}
                     />
                   </div>
 
@@ -262,7 +263,7 @@ export default function VehicleDetailPage() {
                         <div>
                           <span className="text-gray-600 block mb-1">Location</span>
                           <span className="font-semibold text-blue-600 block">
-                            {routeData.points[currentIndex].location || 'Unknown Location'}
+                            {vehicle.city || routeData.points[currentIndex].location || 'Unknown Location'}
                           </span>
                         </div>
                         <div>
@@ -397,8 +398,8 @@ export default function VehicleDetailPage() {
                             <MapPin className="w-6 h-6 text-white" />
                           </div>
                           <div>
-                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">City</p>
-                            <p className="text-xl font-bold text-gray-900">Gurugram</p>
+                            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Site</p>
+                            <p className="text-sm font-bold text-gray-900 leading-snug">{vehicle.city}</p>
                           </div>
                         </div>
                       </div>

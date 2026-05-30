@@ -14,6 +14,12 @@ interface EnhancedMapProps {
   showPlayback?: boolean;
   overspeedThreshold?: number;
   vehicleNumber?: string;
+  siteName?: string;
+}
+
+function resolveLocationName(point: RoutePoint, siteName?: string) {
+  if (siteName) return siteName;
+  return point.location || 'Unknown Location';
 }
 
 export default function EnhancedMap({ 
@@ -21,7 +27,8 @@ export default function EnhancedMap({
   currentIndex = 0, 
   showPlayback = false,
   overspeedThreshold = 80,
-  vehicleNumber = 'Unknown'
+  vehicleNumber = 'Unknown',
+  siteName,
 }: EnhancedMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -259,7 +266,7 @@ export default function EnhancedMap({
         jcbEl.style.cursor = 'pointer';
 
         const currentPoint = points[currentIndex];
-        const locationName = currentPoint.location || 'Unknown Location';
+        const locationName = resolveLocationName(currentPoint, siteName);
         const displayStatus = currentPoint.status === 'WORKING' ? 'WORKING' : (currentPoint.status || 'Unknown');
 
         markerRef.current = new mapboxgl.Marker({ element: jcbEl })
@@ -298,14 +305,14 @@ export default function EnhancedMap({
     if (map.isStyleLoaded()) {
       map.fire('load');
     }
-  }, [points, overspeedThreshold, showPlayback]);
+  }, [points, overspeedThreshold, showPlayback, siteName]);
 
   useEffect(() => {
     if (!mapRef.current || !showPlayback || !markerRef.current || !popupRef.current || points.length === 0) return;
 
     const currentPoint = points[currentIndex];
     if (currentPoint) {
-      const locationName = currentPoint.location || 'Unknown Location';
+      const locationName = resolveLocationName(currentPoint, siteName);
       const displayStatus = currentPoint.status === 'WorkingI' ? 'WORKING' : (currentPoint.status || 'Unknown');
 
       markerRef.current.setLngLat([currentPoint.lng, currentPoint.lat]);
@@ -332,7 +339,7 @@ export default function EnhancedMap({
       
       mapRef.current.panTo([currentPoint.lng, currentPoint.lat], { duration: 500 });
     }
-  }, [currentIndex, showPlayback, points, overspeedThreshold]);
+  }, [currentIndex, showPlayback, points, overspeedThreshold, siteName, vehicleNumber]);
 
   const toggleFullscreen = () => {
     if (!mapContainerRef.current) return;

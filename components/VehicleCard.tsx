@@ -1,9 +1,7 @@
 'use client';
 
 import { Vehicle } from '@/types';
-import { Truck, Clock, Circle, MapPin, ArrowRight } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { useState, useEffect } from 'react';
+import { Truck, MapPin, ArrowRight } from 'lucide-react';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -51,11 +49,6 @@ export default function VehicleCard({ vehicle, onClick }: VehicleCardProps) {
   };
 
   const status = statusConfig[vehicle.status];
-  const [lastSeenText, setLastSeenText] = useState('');
-
-  useEffect(() => {
-    setLastSeenText(formatDistanceToNow(new Date(vehicle.lastSeen), { addSuffix: true }));
-  }, [vehicle.lastSeen]);
 
   return (
     <div
@@ -96,21 +89,17 @@ export default function VehicleCard({ vehicle, onClick }: VehicleCardProps) {
             <span className="text-gray-600 font-medium">Model</span>
             <span className="font-bold text-gray-900">{vehicle.model}</span>
           </div>
-          <div className="flex items-center justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
-            <span className="text-gray-600 font-medium">Location</span>
-            <span className="font-bold text-gray-900 flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-blue-500" />
+          <div className="flex items-start justify-between text-sm bg-gray-50 rounded-lg px-3 py-2 gap-2">
+            <span className="text-gray-600 font-medium shrink-0">Site</span>
+            <span className="font-bold text-gray-900 flex items-start gap-1 text-right leading-snug">
+              <MapPin className="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" />
               {vehicle.city}
             </span>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t-2 border-gray-100">
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <Clock className="w-4 h-4" />
-            <span className="font-medium">{lastSeenText || 'recently'}</span>
-          </div>
+        <div className="flex items-center justify-end pt-3 border-t-2 border-gray-100">
           <div className="flex items-center gap-1 text-blue-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <span>View Details</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
