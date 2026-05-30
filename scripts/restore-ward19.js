@@ -5,13 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 const { MongoClient } = require('mongodb');
-require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
-if (!process.env.MONGODB_URI) {
-  require('dotenv').config({ path: path.join(__dirname, '../.env') });
-}
-
-const uri = process.env.MONGODB_URI || 'mongodb+srv://krishnaupadhyay112211_db_user:Ram161003@gps-tracker.ozcq3tw.mongodb.net/';
-const dbName = process.env.MONGODB_DB_NAME || 'gps_tracker';
+const { uri, dbName } = require('./mongodb-config');
 
 const VEHICLE_ID = 'HR26DP0703';
 

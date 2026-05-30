@@ -1,25 +1,13 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import { getAlertsFromDb } from '@/lib/db';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const vehicleId = searchParams.get('vehicleId');
     const limit = parseInt(searchParams.get('limit') || '10');
-    
-    const db = await connectToDatabase();
-    let query = {};
-    
-    if (vehicleId) {
-      query = { vehicleId };
-    }
-    
-    const alerts = await db.collection('alerts')
-      .find(query)
-      .sort({ timestamp: -1 })
-      .limit(limit)
-      .toArray();
-    
+
+    const alerts = await getAlertsFromDb(vehicleId, limit);
     return NextResponse.json(alerts);
   } catch (error) {
     console.error('Error fetching alerts:', error);
@@ -29,4 +17,3 @@ export async function GET(request: Request) {
     );
   }
 }
-

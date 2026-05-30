@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import { getRouteDatesFromDb } from '@/lib/db';
 
 export async function GET(
   request: Request,
@@ -7,14 +7,7 @@ export async function GET(
 ) {
   try {
     const { vehicleId } = await params;
-    const db = await connectToDatabase();
-    const routes = await db.collection('routes')
-      .find({ vehicleId })
-      .project({ date: 1, _id: 0 })
-      .toArray();
-    
-    const dates = routes.map(r => r.date).sort().reverse();
-    
+    const dates = await getRouteDatesFromDb(vehicleId);
     return NextResponse.json(dates);
   } catch (error) {
     console.error('Error fetching dates:', error);
@@ -24,4 +17,3 @@ export async function GET(
     );
   }
 }
-

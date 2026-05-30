@@ -131,9 +131,8 @@ export default function EnhancedMap({
         // Calculate distance to decide if we need route matching
         const distance = calculateDistance(startPoint.lat, startPoint.lng, endPoint.lat, endPoint.lng);
         
-        // Use Directions API for segments longer than 5 meters to get detailed routes with more points
-        // This creates more visible lines with intermediate waypoints
-        if (mapboxToken && distance > 5) {
+        // Open-ground WORKING points: draw actual GPS path (no road snapping)
+        if (mapboxToken && distance > 5 && !isWorkingArea) {
           try {
             const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${startPoint.lng},${startPoint.lat};${endPoint.lng},${endPoint.lat}?` + new URLSearchParams({
               access_token: mapboxToken,

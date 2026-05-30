@@ -2,8 +2,7 @@ const { MongoClient } = require('mongodb');
 const fs = require('fs');
 const path = require('path');
 
-const uri = 'mongodb+srv://krishnaupadhyay112211_db_user:Ram161003@gps-tracker.ozcq3tw.mongodb.net/';
-const dbName = 'gps_tracker';
+const { uri, dbName } = require('./mongodb-config');
 
 async function migrateData() {
   const client = new MongoClient(uri);

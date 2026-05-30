@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import { getRouteFromDb } from '@/lib/db';
 
 export async function GET(
   request: Request,
@@ -7,22 +7,16 @@ export async function GET(
 ) {
   try {
     const { vehicleId, date } = await params;
-    const db = await connectToDatabase();
-    const route = await db.collection('routes').findOne({
-      vehicleId,
-      date
-    });
-    
+    const route = await getRouteFromDb(vehicleId, date);
+
     if (!route) {
       return NextResponse.json(
         { error: 'Route not found' },
         { status: 404 }
       );
     }
-    
-    // Remove MongoDB _id field
-    const { _id, ...routeData } = route;
-    
+
+    const { _id, ...routeData } = route as { _id?: unknown } & Record<string, unknown>;
     return NextResponse.json(routeData);
   } catch (error) {
     console.error('Error fetching route:', error);
@@ -32,4 +26,3 @@ export async function GET(
     );
   }
 }
-

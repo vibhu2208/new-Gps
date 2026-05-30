@@ -53,6 +53,12 @@ export default function VehicleDetailPage() {
   }, [vehicleId]);
 
   useEffect(() => {
+    if (!selectedDate) {
+      setRouteData(null);
+      setIsLoading(false);
+      return;
+    }
+
     const loadRouteData = async () => {
       setIsLoading(true);
       const data = await getRouteData(vehicleId, selectedDate, { useRawCoordinates: false });

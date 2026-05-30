@@ -8,6 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { MongoClient } = require('mongodb');
+const { uri, dbName } = require('./mongodb-config');
 
 const csvFilePath = path.join(__dirname, '../data/kadarpur_hr38t3206_nov23_dec24_2025.csv');
 const outputFilePath = path.join(__dirname, '../public/data/routes.json');
@@ -49,8 +50,6 @@ function calculateSpeed(lat1, lng1, lat2, lng2, timeDiffMinutes) {
 }
 
 async function saveToMongoDB(routes) {
-  const uri = 'mongodb+srv://krishnaupadhyay112211_db_user:Ram161003@gps-tracker.ozcq3tw.mongodb.net/';
-  const dbName = 'gps_tracker';
   const client = new MongoClient(uri, { 
     serverSelectionTimeoutMS: 10000,
     connectTimeoutMS: 10000 

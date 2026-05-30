@@ -15,5 +15,15 @@
     "phone": "+91-9876543210",
     "timezone": "Asia/Kolkata",
     "language": "en"
+  },
+  {
+    "id": "3",
+    "email": "demo@fleetzi.in",
+    "password": "Demo@2026",
+    "name": "Demo User",
+    "role": "user",
+    "phone": "+91-9000000003",
+    "timezone": "Asia/Kolkata",
+    "language": "en"
   }
 ]

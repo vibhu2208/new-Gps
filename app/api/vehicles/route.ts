@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import { getVehiclesFromDb } from '@/lib/db';
 
 export async function GET() {
   try {
-    const db = await connectToDatabase();
-    const vehicles = await db.collection('vehicles').find({}).toArray();
-    
+    const vehicles = await getVehiclesFromDb();
     return NextResponse.json(vehicles);
   } catch (error) {
     console.error('Error fetching vehicles:', error);
@@ -15,4 +13,3 @@ export async function GET() {
     );
   }
 }
-

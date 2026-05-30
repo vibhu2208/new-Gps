@@ -1,7 +1,11 @@
 import { MongoClient, Db } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || 'mongodb+srv://krishnaupadhyay112211_db_user:Ram161003@gps-tracker.ozcq3tw.mongodb.net/';
+const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB_NAME || 'gps_tracker';
+
+if (!uri) {
+  throw new Error('MONGODB_URI environment variable is not set');
+}
 
 let client: MongoClient | null = null;
 let db: Db | null = null;
@@ -13,7 +17,11 @@ export async function connectToDatabase(): Promise<Db> {
 
   try {
     if (!client) {
-      client = new MongoClient(uri);
+      client = new MongoClient(uri, {
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 10000,
+        family: 4,
+      });
       await client.connect();
     }
     
