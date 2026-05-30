@@ -142,6 +142,7 @@ function loadVehicleRoutes(vehicleId: string): Record<string, RouteData> {
   return routes;
 }
 
+/** When true, reads data/*.json and CSVs instead of MongoDB. Set on Vercel if DB is not migrated yet. */
 export function useLocalData(): boolean {
   return process.env.USE_LOCAL_DATA === 'true';
 }

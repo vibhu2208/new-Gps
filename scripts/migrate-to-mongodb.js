@@ -71,6 +71,7 @@ async function migrateData() {
       console.log(`✅ Migrated ${totalDays} route days with ${totalPoints} total points`);
     } else {
       console.log('⚠️  routes.json not found, skipping routes migration');
+      console.log('   Run: node scripts/convert-local-road-to-routes.js');
     }
     
     // 3. Migrate Alerts (if exists)
@@ -125,6 +126,8 @@ async function migrateData() {
   }
 }
 
-// Run migration
-migrateData().catch(console.error);
+migrateData().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
 

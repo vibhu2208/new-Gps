@@ -199,9 +199,8 @@ function main() {
   }
 
   saveToMongoDB(mergedRoutes).catch((error) => {
-    console.warn('\nMongoDB import skipped (run locally if needed):', error.message);
-    console.warn('  node scripts/convert-local-road-to-routes.js', targetVehicle || '');
-    console.warn('  node scripts/update-vehicles-mongodb.js');
+    console.error('\n❌ MongoDB import failed:', error.message);
+    process.exit(1);
   });
 }
 
