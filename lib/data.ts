@@ -135,8 +135,6 @@ export const getAllVehicleData = async (vehicleId: string): Promise<any[]> => {
           allDataPoints.push({
             Vehicle: vehicle?.name || vehicleId,
             PlateNumber: vehicle?.plateNumber || vehicleId,
-            Ward: vehicle?.ward || 'Unknown',
-            City: formatExportLocation(undefined, vehicle?.city),
             Date: date,
             Timestamp: new Date(point.timestamp).toLocaleString(),
             Latitude: point.lat,

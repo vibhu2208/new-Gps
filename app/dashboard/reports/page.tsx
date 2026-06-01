@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { getVehicles, getRouteData, getAlerts, getAllVehicleData, exportToCSV, getAvailableDates } from '@/lib/data';
+import { exportToPDF } from '@/lib/export-pdf';
+import { exportCompleteVehicleHistoryMonthlyPDFs } from '@/lib/export-vehicle-history-pdf';
 import { formatExportLocation } from '@/lib/site';
-import { Download, FileText, Car } from 'lucide-react';
+import ReportExportButtons from '@/components/ReportExportButtons';
+import { FileText, Car } from 'lucide-react';
 import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
 import { Vehicle } from '@/types';
 import DatePicker from '@/components/DatePicker';
@@ -62,199 +65,276 @@ export default function ReportsPage() {
   // Convert date strings to Date objects for DatePicker
   const dateOptions = availableDates.map(date => new Date(date)).reverse(); // Most recent first
 
-  const handleExportTrips = async () => {
+  const buildTripExportData = async () => {
+    const routeData = await getRouteData(selectedVehicle, selectedDate);
+    if (!routeData) return null;
+    const vehicle = vehicles.find((v) => v.id === selectedVehicle);
+    return routeData.points.map((point) => {
+      const pointDate = new Date(point.timestamp);
+      return {
+        Vehicle: vehicle?.name,
+        PlateNumber: vehicle?.plateNumber,
+        Date: format(pointDate, 'yyyy-MM-dd'),
+        Time: format(pointDate, 'HH:mm:ss'),
+        Timestamp: format(pointDate, 'yyyy-MM-dd HH:mm:ss'),
+        Latitude: point.lat,
+        Longitude: point.lng,
+        Location: formatExportLocation(point.location, vehicle?.city),
+      };
+    });
+  };
+
+  const buildSummaryExportData = async () =>
+    Promise.all(
+      vehicles.map(async (vehicle) => {
+        const routeData = await getRouteData(vehicle.id, selectedDate);
+        return {
+          Vehicle: vehicle.name,
+          PlateNumber: vehicle.plateNumber,
+          Driver: vehicle.driver,
+          Location: formatExportLocation(undefined, vehicle.city),
+          Status: vehicle.status,
+          TotalDistance: routeData?.summary.totalDistance || 0,
+          DrivingDuration: routeData?.summary.drivingDuration || 0,
+          IdleDuration: routeData?.summary.idleDuration || 0,
+          MaxSpeed: routeData?.summary.maxSpeed || 0,
+          AvgSpeed: routeData?.summary.avgSpeed || 0,
+          Stops: routeData?.summary.stops || 0,
+        };
+      })
+    );
+
+  const buildAlertsExportData = async () => {
+    const alertList = await getAlerts();
+    return alertList.map((alert) => ({
+      Vehicle: alert.vehicleName,
+      VehicleID: alert.vehicleId,
+      Type: alert.type,
+      Severity: alert.severity,
+      Message: alert.message,
+      Location: formatExportLocation(alert.location),
+      Timestamp: format(new Date(alert.timestamp), 'yyyy-MM-dd HH:mm:ss'),
+    }));
+  };
+
+  const buildWeeklyExportData = async () => {
+    const endDate = new Date(selectedWeekEnd);
+    const startDate = subDays(endDate, 6);
+    return Promise.all(
+      vehicles.map(async (vehicle) => {
+        let totalDistance = 0;
+        let totalDriving = 0;
+        let totalIdle = 0;
+        let maxSpeed = 0;
+        let daysWithData = 0;
+        for (let i = 0; i < 7; i++) {
+          const date = format(subDays(endDate, i), 'yyyy-MM-dd');
+          const routeData = await getRouteData(vehicle.id, date);
+          if (routeData) {
+            totalDistance += routeData.summary.totalDistance;
+            totalDriving += routeData.summary.drivingDuration;
+            totalIdle += routeData.summary.idleDuration;
+            maxSpeed = Math.max(maxSpeed, routeData.summary.maxSpeed);
+            daysWithData++;
+          }
+        }
+        return {
+          Vehicle: vehicle.name,
+          PlateNumber: vehicle.plateNumber,
+          Driver: vehicle.driver,
+          Location: formatExportLocation(undefined, vehicle.city),
+          WeekStart: format(startDate, 'yyyy-MM-dd'),
+          WeekEnd: format(endDate, 'yyyy-MM-dd'),
+          TotalDistance: Math.round(totalDistance * 10) / 10,
+          TotalDrivingTime: totalDriving,
+          TotalIdleTime: totalIdle,
+          MaxSpeed: maxSpeed,
+          DaysActive: daysWithData,
+        };
+      })
+    );
+  };
+
+  const buildMonthlyExportData = async () => {
+    const currentDate = new Date(selectedDate);
+    const monthStart = startOfMonth(currentDate);
+    const monthEnd = endOfMonth(currentDate);
+    return Promise.all(
+      vehicles.map(async (vehicle) => {
+        let totalDistance = 0;
+        let totalDriving = 0;
+        let totalIdle = 0;
+        let maxSpeed = 0;
+        let daysWithData = 0;
+        let date = new Date(monthStart);
+        while (date <= monthEnd && date <= new Date()) {
+          const dateStr = format(date, 'yyyy-MM-dd');
+          const routeData = await getRouteData(vehicle.id, dateStr);
+          if (routeData) {
+            totalDistance += routeData.summary.totalDistance;
+            totalDriving += routeData.summary.drivingDuration;
+            totalIdle += routeData.summary.idleDuration;
+            maxSpeed = Math.max(maxSpeed, routeData.summary.maxSpeed);
+            daysWithData++;
+          }
+          date = new Date(date.setDate(date.getDate() + 1));
+        }
+        return {
+          Vehicle: vehicle.name,
+          PlateNumber: vehicle.plateNumber,
+          Driver: vehicle.driver,
+          Location: formatExportLocation(undefined, vehicle.city),
+          Month: format(currentDate, 'MMMM yyyy'),
+          TotalDistance: Math.round(totalDistance * 10) / 10,
+          TotalDrivingTime: totalDriving,
+          TotalIdleTime: totalIdle,
+          MaxSpeed: maxSpeed,
+          DaysActive: daysWithData,
+          AvgDistancePerDay:
+            daysWithData > 0 ? Math.round((totalDistance / daysWithData) * 10) / 10 : 0,
+        };
+      })
+    );
+  };
+
+  const withExport = async (fn: () => Promise<void>) => {
     setIsExporting(true);
     try {
-      const routeData = await getRouteData(selectedVehicle, selectedDate);
-      if (!routeData) {
+      await fn();
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportTripsCsv = () =>
+    withExport(async () => {
+      const exportData = await buildTripExportData();
+      if (!exportData?.length) {
         alert('No data available for the selected vehicle and date');
         return;
       }
-
-      const vehicle = vehicles.find(v => v.id === selectedVehicle);
-      const exportData = routeData.points.map(point => {
-        const pointDate = new Date(point.timestamp);
-        return {
-          Vehicle: vehicle?.name,
-          PlateNumber: vehicle?.plateNumber,
-          Ward: vehicle?.ward || 'Unknown',
-          Date: format(pointDate, 'yyyy-MM-dd'),
-          Time: format(pointDate, 'HH:mm:ss'),
-          Timestamp: format(pointDate, 'yyyy-MM-dd HH:mm:ss'),
-          Latitude: point.lat,
-          Longitude: point.lng,
-          Location: formatExportLocation(point.location, vehicle?.city),
-        };
-      });
-
+      const vehicle = vehicles.find((v) => v.id === selectedVehicle);
       exportToCSV(exportData, `trip-report-${vehicle?.plateNumber}-${selectedDate}.csv`);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+    });
 
-  const handleExportSummary = async () => {
-    setIsExporting(true);
-    try {
-      const summaryData = await Promise.all(
-        vehicles.map(async (vehicle) => {
-          const routeData = await getRouteData(vehicle.id, selectedDate);
-          return {
-            Vehicle: vehicle.name,
-            PlateNumber: vehicle.plateNumber,
-            Driver: vehicle.driver,
-            City: formatExportLocation(undefined, vehicle.city),
-            Status: vehicle.status,
-            TotalDistance: routeData?.summary.totalDistance || 0,
-            DrivingDuration: routeData?.summary.drivingDuration || 0,
-            IdleDuration: routeData?.summary.idleDuration || 0,
-            MaxSpeed: routeData?.summary.maxSpeed || 0,
-            AvgSpeed: routeData?.summary.avgSpeed || 0,
-            Stops: routeData?.summary.stops || 0,
-          };
-        })
-      );
+  const handleExportTripsPdf = () =>
+    withExport(async () => {
+      const exportData = await buildTripExportData();
+      if (!exportData?.length) {
+        alert('No data available for the selected vehicle and date');
+        return;
+      }
+      const vehicle = vehicles.find((v) => v.id === selectedVehicle);
+      exportToPDF(exportData, {
+        title: 'Trip Details Report',
+        subtitle: `${vehicle?.name} (${vehicle?.plateNumber}) — ${selectedDate}`,
+        filename: `trip-report-${vehicle?.plateNumber}-${selectedDate}.pdf`,
+      });
+    });
 
+  const handleExportSummaryCsv = () =>
+    withExport(async () => {
+      const summaryData = await buildSummaryExportData();
       exportToCSV(summaryData, `fleet-summary-${selectedDate}.csv`);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+    });
 
-  const handleExportAlerts = async () => {
-    setIsExporting(true);
-    try {
-      const alerts = await getAlerts();
-      const exportData = alerts.map(alert => ({
-        Vehicle: alert.vehicleName,
-        VehicleID: alert.vehicleId,
-        Type: alert.type,
-        Severity: alert.severity,
-        Message: alert.message,
-        Location: alert.location,
-        Timestamp: format(new Date(alert.timestamp), 'yyyy-MM-dd HH:mm:ss'),
-      }));
+  const handleExportSummaryPdf = () =>
+    withExport(async () => {
+      const summaryData = await buildSummaryExportData();
+      exportToPDF(summaryData, {
+        title: 'Fleet Summary Report',
+        subtitle: `Date: ${selectedDate}`,
+        filename: `fleet-summary-${selectedDate}.pdf`,
+      });
+    });
 
+  const handleExportAlertsCsv = () =>
+    withExport(async () => {
+      const exportData = await buildAlertsExportData();
       exportToCSV(exportData, `alerts-report-${format(new Date(), 'yyyy-MM-dd')}.csv`);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+    });
 
-  const handleExportWeeklySummary = async () => {
-    setIsExporting(true);
-    try {
+  const handleExportAlertsPdf = () =>
+    withExport(async () => {
+      const exportData = await buildAlertsExportData();
+      exportToPDF(exportData, {
+        title: 'Alerts Report',
+        subtitle: `Total alerts: ${exportData.length}`,
+        filename: `alerts-report-${format(new Date(), 'yyyy-MM-dd')}.pdf`,
+      });
+    });
+
+  const handleExportWeeklySummaryCsv = () =>
+    withExport(async () => {
       const endDate = new Date(selectedWeekEnd);
       const startDate = subDays(endDate, 6);
-      
-      const weeklyData = await Promise.all(
-        vehicles.map(async (vehicle) => {
-          let totalDistance = 0;
-          let totalDriving = 0;
-          let totalIdle = 0;
-          let maxSpeed = 0;
-          let daysWithData = 0;
-
-          for (let i = 0; i < 7; i++) {
-            const date = format(subDays(endDate, i), 'yyyy-MM-dd');
-            const routeData = await getRouteData(vehicle.id, date);
-            if (routeData) {
-              totalDistance += routeData.summary.totalDistance;
-              totalDriving += routeData.summary.drivingDuration;
-              totalIdle += routeData.summary.idleDuration;
-              maxSpeed = Math.max(maxSpeed, routeData.summary.maxSpeed);
-              daysWithData++;
-            }
-          }
-
-          return {
-            Vehicle: vehicle.name,
-            PlateNumber: vehicle.plateNumber,
-            Driver: vehicle.driver,
-            WeekStart: format(startDate, 'yyyy-MM-dd'),
-            WeekEnd: format(endDate, 'yyyy-MM-dd'),
-            TotalDistance: Math.round(totalDistance * 10) / 10,
-            TotalDrivingTime: totalDriving,
-            TotalIdleTime: totalIdle,
-            MaxSpeed: maxSpeed,
-            DaysActive: daysWithData,
-          };
-        })
+      const weeklyData = await buildWeeklyExportData();
+      exportToCSV(
+        weeklyData,
+        `weekly-summary-${format(startDate, 'yyyy-MM-dd')}-to-${format(endDate, 'yyyy-MM-dd')}.csv`
       );
+    });
 
-      exportToCSV(weeklyData, `weekly-summary-${format(startDate, 'yyyy-MM-dd')}-to-${format(endDate, 'yyyy-MM-dd')}.csv`);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  const handleExportWeeklySummaryPdf = () =>
+    withExport(async () => {
+      const endDate = new Date(selectedWeekEnd);
+      const startDate = subDays(endDate, 6);
+      const weeklyData = await buildWeeklyExportData();
+      exportToPDF(weeklyData, {
+        title: 'Weekly Summary Report',
+        subtitle: `${format(startDate, 'yyyy-MM-dd')} to ${format(endDate, 'yyyy-MM-dd')}`,
+        filename: `weekly-summary-${format(startDate, 'yyyy-MM-dd')}-to-${format(endDate, 'yyyy-MM-dd')}.pdf`,
+      });
+    });
 
-  const handleExportMonthlySummary = async () => {
-    setIsExporting(true);
-    try {
+  const handleExportMonthlySummaryCsv = () =>
+    withExport(async () => {
       const currentDate = new Date(selectedDate);
-      const monthStart = startOfMonth(currentDate);
-      const monthEnd = endOfMonth(currentDate);
-      
-      const monthlyData = await Promise.all(
-        vehicles.map(async (vehicle) => {
-          let totalDistance = 0;
-          let totalDriving = 0;
-          let totalIdle = 0;
-          let maxSpeed = 0;
-          let daysWithData = 0;
-
-          let date = new Date(monthStart);
-          while (date <= monthEnd && date <= new Date()) {
-            const dateStr = format(date, 'yyyy-MM-dd');
-            const routeData = await getRouteData(vehicle.id, dateStr);
-            if (routeData) {
-              totalDistance += routeData.summary.totalDistance;
-              totalDriving += routeData.summary.drivingDuration;
-              totalIdle += routeData.summary.idleDuration;
-              maxSpeed = Math.max(maxSpeed, routeData.summary.maxSpeed);
-              daysWithData++;
-            }
-            date = new Date(date.setDate(date.getDate() + 1));
-          }
-
-          return {
-            Vehicle: vehicle.name,
-            PlateNumber: vehicle.plateNumber,
-            Driver: vehicle.driver,
-            Month: format(currentDate, 'MMMM yyyy'),
-            TotalDistance: Math.round(totalDistance * 10) / 10,
-            TotalDrivingTime: totalDriving,
-            TotalIdleTime: totalIdle,
-            MaxSpeed: maxSpeed,
-            DaysActive: daysWithData,
-            AvgDistancePerDay: daysWithData > 0 ? Math.round((totalDistance / daysWithData) * 10) / 10 : 0,
-          };
-        })
-      );
-
+      const monthlyData = await buildMonthlyExportData();
       exportToCSV(monthlyData, `monthly-summary-${format(currentDate, 'yyyy-MM')}.csv`);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+    });
 
-  const handleExportCompleteVehicleData = async () => {
-    setIsExporting(true);
-    try {
+  const handleExportMonthlySummaryPdf = () =>
+    withExport(async () => {
+      const currentDate = new Date(selectedDate);
+      const monthlyData = await buildMonthlyExportData();
+      exportToPDF(monthlyData, {
+        title: 'Monthly Summary Report',
+        subtitle: format(currentDate, 'MMMM yyyy'),
+        filename: `monthly-summary-${format(currentDate, 'yyyy-MM')}.pdf`,
+      });
+    });
+
+  const handleExportCompleteVehicleDataCsv = () =>
+    withExport(async () => {
       const allData = await getAllVehicleData(selectedVehicle);
       if (allData.length === 0) {
         alert('No data available for the selected vehicle');
         return;
       }
+      const vehicle = vehicles.find((v) => v.id === selectedVehicle);
+      exportToCSV(
+        allData,
+        `complete-vehicle-data-${vehicle?.plateNumber || selectedVehicle}-${format(new Date(), 'yyyy-MM-dd')}.csv`
+      );
+    });
 
-      const vehicle = vehicles.find(v => v.id === selectedVehicle);
-      const filename = `complete-vehicle-data-${vehicle?.plateNumber || selectedVehicle}-${format(new Date(), 'yyyy-MM-dd')}.csv`;
-      
-      exportToCSV(allData, filename);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  const handleExportCompleteVehicleDataPdf = () =>
+    withExport(async () => {
+      const allData = await getAllVehicleData(selectedVehicle);
+      if (allData.length === 0) {
+        alert('No data available for the selected vehicle');
+        return;
+      }
+      const vehicle = vehicles.find((v) => v.id === selectedVehicle);
+      const { monthCount } = await exportCompleteVehicleHistoryMonthlyPDFs(allData, {
+        vehicleName: vehicle?.name || selectedVehicle,
+        plateNumber: vehicle?.plateNumber || selectedVehicle,
+      });
+      if (monthCount === 0) {
+        alert('No dated records found to split into monthly PDFs');
+      }
+    });
 
   const selectedVehicleData = vehicles.find(v => v.id === selectedVehicle);
 
@@ -310,14 +390,14 @@ export default function ReportsPage() {
               />
             </div>
 
-            <button
-              onClick={handleExportTrips}
-              disabled={!selectedVehicle || !selectedDate || isExporting}
-              className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-5 h-5" />
-              Export Trip Report
-            </button>
+            <ReportExportButtons
+              onExportCsv={handleExportTripsCsv}
+              onExportPdf={handleExportTripsPdf}
+              disabled={!selectedVehicle || !selectedDate}
+              isExporting={isExporting}
+              csvLabel="Export Excel (CSV)"
+              pdfLabel="Export PDF"
+            />
           </div>
         </div>
 
@@ -359,25 +439,28 @@ export default function ReportsPage() {
                 <li>• All GPS coordinates and timestamps</li>
                 <li>• Speed data for every point</li>
                 <li>• Location and status information</li>
-                <li>• Ward and vehicle details</li>
+                <li>• Vehicle and location details</li>
                 <li>• Complete journey history across all dates</li>
                 <li>• Stop/movement indicators</li>
               </ul>
-              <div className="pt-2 border-t border-orange-200 mt-3">
-                <span className="text-orange-700 font-medium">
-                  This will export ALL available data for the selected vehicle
+              <div className="pt-2 border-t border-orange-200 mt-3 space-y-1">
+                <span className="text-orange-700 font-medium block">
+                  Excel (CSV): all available data in one file
+                </span>
+                <span className="text-orange-600 text-sm block">
+                  PDF: one ZIP with 3 monthly reports (last 3 months of GPS data)
                 </span>
               </div>
             </div>
 
-            <button
-              onClick={handleExportCompleteVehicleData}
-              disabled={isExporting}
-              className="w-full flex items-center justify-center gap-2 bg-orange-600 text-white py-3 rounded-lg hover:bg-orange-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-5 h-5" />
-              {isExporting ? 'Exporting...' : 'Export Complete Vehicle Data'}
-            </button>
+            <ReportExportButtons
+              onExportCsv={handleExportCompleteVehicleDataCsv}
+              onExportPdf={handleExportCompleteVehicleDataPdf}
+              disabled={!selectedVehicle}
+              isExporting={isExporting}
+              csvLabel="Export Excel (CSV)"
+              pdfLabel="Export PDF (ZIP)"
+            />
           </div>
         </div>
 
@@ -416,14 +499,14 @@ export default function ReportsPage() {
               </ul>
             </div>
 
-            <button
-              onClick={handleExportSummary}
-              disabled={!selectedDate || isExporting}
-              className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-5 h-5" />
-              Export Summary Report
-            </button>
+            <ReportExportButtons
+              onExportCsv={handleExportSummaryCsv}
+              onExportPdf={handleExportSummaryPdf}
+              disabled={!selectedDate}
+              isExporting={isExporting}
+              csvLabel="Export Excel (CSV)"
+              pdfLabel="Export PDF"
+            />
           </div>
         </div>
 
@@ -454,14 +537,13 @@ export default function ReportsPage() {
               </div>
             </div>
 
-            <button
-              onClick={handleExportAlerts}
-              disabled={isExporting}
-              className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-5 h-5" />
-              Export Alerts Report
-            </button>
+            <ReportExportButtons
+              onExportCsv={handleExportAlertsCsv}
+              onExportPdf={handleExportAlertsPdf}
+              isExporting={isExporting}
+              csvLabel="Export Excel (CSV)"
+              pdfLabel="Export PDF"
+            />
           </div>
         </div>
 
@@ -509,14 +591,14 @@ export default function ReportsPage() {
               </ul>
             </div>
 
-            <button
-              onClick={handleExportWeeklySummary}
-              disabled={isExporting}
-              className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-5 h-5" />
-              {isExporting ? 'Exporting...' : 'Export Weekly Report'}
-            </button>
+            <ReportExportButtons
+              onExportCsv={handleExportWeeklySummaryCsv}
+              onExportPdf={handleExportWeeklySummaryPdf}
+              disabled={!selectedWeekEnd}
+              isExporting={isExporting}
+              csvLabel="Export Excel (CSV)"
+              pdfLabel="Export PDF"
+            />
           </div>
         </div>
 
@@ -543,14 +625,14 @@ export default function ReportsPage() {
               </ul>
             </div>
 
-            <button
-              onClick={handleExportMonthlySummary}
-              disabled={isExporting}
-              className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-5 h-5" />
-              {isExporting ? 'Exporting...' : 'Export Monthly Report'}
-            </button>
+            <ReportExportButtons
+              onExportCsv={handleExportMonthlySummaryCsv}
+              onExportPdf={handleExportMonthlySummaryPdf}
+              disabled={!selectedDate}
+              isExporting={isExporting}
+              csvLabel="Export Excel (CSV)"
+              pdfLabel="Export PDF"
+            />
           </div>
         </div>
 
@@ -566,14 +648,15 @@ export default function ReportsPage() {
 
           <div className="space-y-3 text-sm text-gray-700">
             <p>
-              All reports are exported in CSV format, which can be opened in Excel, Google Sheets, or any spreadsheet application.
+              Reports download as <strong>Excel (CSV)</strong> or <strong>PDF</strong>. PDF includes the site name,
+              report title, and paginated tables. Large histories may be truncated in PDF (use CSV for full data).
             </p>
             <div className="bg-white rounded-lg p-3 space-y-2">
               <h3 className="font-medium text-gray-900">Available Data:</h3>
               <ul className="space-y-1 text-gray-600">
                 <li>✓ GPS coordinates and timestamps</li>
                 <li>✓ Speed and distance metrics</li>
-                <li>✓ Ward and vehicle information</li>
+                <li>✓ Vehicle and location information</li>
                 <li>✓ Alert history and severity</li>
                 <li>✓ Trip summaries and analytics</li>
               </ul>

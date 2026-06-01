@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getVehicleById, getRouteData, getAlertsByVehicle, getAvailableDates, exportToCSV } from '@/lib/data';
+import { exportToPDF } from '@/lib/export-pdf';
 import { formatExportLocation, SITE_DISPLAY_NAME } from '@/lib/site';
 import { RouteData } from '@/types';
 import EnhancedMap from '@/components/EnhancedMap';
@@ -119,20 +120,33 @@ export default function VehicleDetailPage() {
     setIsPlaying(false);
   };
 
-  const handleExportRouteData = () => {
-    if (!routeData || !vehicle) return;
-    
-    const exportData = routeData.points.map(point => ({
+  const buildRouteExportData = () => {
+    if (!routeData || !vehicle) return null;
+    return routeData.points.map((point) => ({
       Vehicle: vehicle.name,
       Plate: vehicle.plateNumber,
       Date: selectedDate,
       Time: format(new Date(point.timestamp), 'HH:mm:ss'),
       Latitude: point.lat.toFixed(6),
       Longitude: point.lng.toFixed(6),
-      Location: formatExportLocation(point.location, vehicle.city)
+      Location: formatExportLocation(point.location, vehicle.city),
     }));
+  };
 
+  const handleExportRouteCsv = () => {
+    const exportData = buildRouteExportData();
+    if (!exportData?.length || !vehicle) return;
     exportToCSV(exportData, `route-history-${vehicle.plateNumber}-${selectedDate}.csv`);
+  };
+
+  const handleExportRoutePdf = () => {
+    const exportData = buildRouteExportData();
+    if (!exportData?.length || !vehicle) return;
+    exportToPDF(exportData, {
+      title: 'Route History Report',
+      subtitle: `${vehicle.name} (${vehicle.plateNumber}) — ${selectedDate}`,
+      filename: `route-history-${vehicle.plateNumber}-${selectedDate}.pdf`,
+    });
   };
 
   if (!vehicle) {
@@ -170,14 +184,24 @@ export default function VehicleDetailPage() {
             <div className="bg-gradient-to-r from-slate-50 to-gray-50 px-6 py-5 border-b-2 border-gray-200 overflow-visible">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-bold text-gray-900">Route History</h2>
-                <div className="flex items-center gap-3 relative z-50">
+                <div className="flex flex-wrap items-center gap-2 relative z-50">
                   <button
-                    onClick={handleExportRouteData}
+                    type="button"
+                    onClick={handleExportRouteCsv}
                     disabled={!routeData || isLoading}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
                   >
                     <Download className="w-4 h-4" />
-                    Export Excel
+                    Excel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleExportRoutePdf}
+                    disabled={!routeData || isLoading}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-xl hover:from-red-700 hover:to-rose-700 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold"
+                  >
+                    <Download className="w-4 h-4" />
+                    PDF
                   </button>
                   <DatePicker
                     selectedDate={selectedDate}
