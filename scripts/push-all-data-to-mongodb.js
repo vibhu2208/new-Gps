@@ -26,9 +26,11 @@ async function main() {
     process.exit(1);
   }
 
-  run('migrate-to-mongodb.js');
+  run('update-vehicles-mongodb.js');
+  run('sync-vehicle-status.js');
   run('convert-local-road-to-routes.js');
   console.log('\n✨ All data pushed to MongoDB (vehicles, alerts, routes).');
+  console.log('   Or use: node scripts/push-fleet-to-mongodb.js');
 }
 
 main().catch((err) => {

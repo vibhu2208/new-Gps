@@ -1,6 +1,6 @@
 'use client';
 
-import { getVehicles, getRecentAlerts } from '@/lib/data';
+import { getVehiclesWithStatus, getRecentAlerts } from '@/lib/data';
 import VehicleCard from '@/components/VehicleCard';
 import AlertCard from '@/components/AlertCard';
 import { useRouter } from 'next/navigation';
@@ -13,14 +13,24 @@ export default function DashboardPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      const [vehiclesData, alertsData] = await Promise.all([
-        getVehicles(),
+      setLoadError(null);
+      const [vehiclesResult, alertsData] = await Promise.all([
+        getVehiclesWithStatus(),
         getRecentAlerts(5)
       ]);
-      setVehicles(vehiclesData);
+      setVehicles(vehiclesResult.data);
+      if (vehiclesResult.error) {
+        setLoadError(vehiclesResult.error);
+      } else if (vehiclesResult.data.length === 0) {
+        setLoadError(
+          'No vehicles returned from the server. Push data to MongoDB and set MONGODB_URI on Vercel (see /api/health).'
+        );
+      }
       setAlerts(alertsData);
       setIsLoading(false);
     };
@@ -77,6 +87,20 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
+      {loadError && (
+        <div className="rounded-xl border-2 border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+          <p className="font-semibold">Could not load fleet data</p>
+          <p className="mt-1">{loadError}</p>
+          <p className="mt-2 text-amber-800">
+            On your PC run: <code className="font-mono bg-amber-100 px-1 rounded">node scripts/push-fleet-to-mongodb.js</code>
+            {' '}then check{' '}
+            <a href="/api/health" className="underline font-medium" target="_blank" rel="noreferrer">
+              /api/health
+            </a>
+            .
+          </p>
+        </div>
+      )}
       {/* Header Section */}
       <div className="flex items-center justify-between">
         <div>

@@ -1,19 +1,43 @@
 import { Vehicle, RouteData, Alert } from '@/types';
 
-export const getVehicles = async (): Promise<Vehicle[]> => {
+export type FetchResult<T> = { data: T; error?: string };
+
+async function apiFetch<T>(url: string): Promise<FetchResult<T>> {
   try {
-    const response = await fetch('/api/vehicles');
-    if (!response.ok) return [];
-    return await response.json();
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      const hint = typeof body.hint === 'string' ? body.hint : undefined;
+      const message = typeof body.error === 'string' ? body.error : response.statusText;
+      return { data: [] as T, error: hint || message || `Request failed (${response.status})` };
+    }
+    const data = await response.json();
+    return { data };
   } catch (error) {
-    console.error('Error fetching vehicles:', error);
-    return [];
+    console.error(`API error ${url}:`, error);
+    return {
+      data: [] as T,
+      error: error instanceof Error ? error.message : 'Network error',
+    };
   }
+}
+
+export const getVehicles = async (): Promise<Vehicle[]> => {
+  const { data } = await apiFetch<Vehicle[]>('/api/vehicles');
+  return Array.isArray(data) ? data : [];
+};
+
+export const getVehiclesWithStatus = async (): Promise<FetchResult<Vehicle[]>> => {
+  const result = await apiFetch<Vehicle[]>('/api/vehicles');
+  return {
+    data: Array.isArray(result.data) ? result.data : [],
+    error: result.error,
+  };
 };
 
 export const getVehicleById = async (id: string): Promise<Vehicle | undefined> => {
   try {
-    const response = await fetch(`/api/vehicles/${id}`);
+    const response = await fetch(`/api/vehicles/${id}`, { cache: 'no-store' });
     if (!response.ok) return undefined;
     return await response.json();
   } catch (error) {
@@ -28,7 +52,7 @@ export const getRouteData = async (
   options: { useRawCoordinates?: boolean } = {}
 ): Promise<RouteData | null> => {
   try {
-    const response = await fetch(`/api/routes/${vehicleId}/${date}`);
+    const response = await fetch(`/api/routes/${vehicleId}/${date}`, { cache: 'no-store' });
     if (!response.ok) return null;
     
     const routeData = await response.json();
@@ -51,7 +75,7 @@ export const getRouteData = async (
 
 export const getAvailableDates = async (vehicleId: string): Promise<string[]> => {
   try {
-    const response = await fetch(`/api/routes/${vehicleId}/dates`);
+    const response = await fetch(`/api/routes/${vehicleId}/dates`, { cache: 'no-store' });
     if (!response.ok) return [];
     return await response.json();
   } catch (error) {
@@ -62,7 +86,7 @@ export const getAvailableDates = async (vehicleId: string): Promise<string[]> =>
 
 export const getAlerts = async (): Promise<Alert[]> => {
   try {
-    const response = await fetch('/api/alerts');
+    const response = await fetch('/api/alerts', { cache: 'no-store' });
     if (!response.ok) return [];
     return await response.json();
   } catch (error) {
@@ -73,7 +97,7 @@ export const getAlerts = async (): Promise<Alert[]> => {
 
 export const getAlertsByVehicle = async (vehicleId: string): Promise<Alert[]> => {
   try {
-    const response = await fetch(`/api/alerts?vehicleId=${vehicleId}`);
+    const response = await fetch(`/api/alerts?vehicleId=${vehicleId}`, { cache: 'no-store' });
     if (!response.ok) return [];
     return await response.json();
   } catch (error) {
@@ -84,7 +108,7 @@ export const getAlertsByVehicle = async (vehicleId: string): Promise<Alert[]> =>
 
 export const getRecentAlerts = async (limit: number = 10): Promise<Alert[]> => {
   try {
-    const response = await fetch(`/api/alerts?limit=${limit}`);
+    const response = await fetch(`/api/alerts?limit=${limit}`, { cache: 'no-store' });
     if (!response.ok) return [];
     return await response.json();
   } catch (error) {

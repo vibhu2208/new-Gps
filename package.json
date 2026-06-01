@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:push": "node scripts/push-all-data-to-mongodb.js"
+    "db:push": "node scripts/push-fleet-to-mongodb.js"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
