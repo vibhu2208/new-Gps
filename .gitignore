@@ -40,6 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# large data files
+# large data files (keep out of git + Vercel)
 public/data/routes.json
+public/data/history/
 data/*.csv
+data/local-road/

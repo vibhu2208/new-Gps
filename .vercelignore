@@ -1,0 +1,6 @@
+# Large local GPS artifacts — production uses MongoDB (USE_LOCAL_DATA=false)
+public/data/routes.json
+public/data/history/
+data/local-road/
+data/**/*.csv
+scripts/

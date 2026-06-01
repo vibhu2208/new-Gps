@@ -1,11 +1,4 @@
-import {
-  useLocalData,
-  getLocalVehicles,
-  getLocalVehicleById,
-  getLocalAlerts,
-  getLocalRoute,
-  getLocalRouteDates,
-} from '@/lib/local-data';
+import { useLocalData } from '@/lib/data-source';
 
 export { useLocalData };
 
@@ -15,21 +8,30 @@ async function getDb() {
 }
 
 export async function getVehiclesFromDb() {
-  if (useLocalData()) return getLocalVehicles();
+  if (useLocalData()) {
+    const { getLocalVehicles } = await import('@/lib/local-data');
+    return getLocalVehicles();
+  }
 
   const db = await getDb();
   return db.collection('vehicles').find({}).toArray();
 }
 
 export async function getVehicleByIdFromDb(id: string) {
-  if (useLocalData()) return getLocalVehicleById(id);
+  if (useLocalData()) {
+    const { getLocalVehicleById } = await import('@/lib/local-data');
+    return getLocalVehicleById(id);
+  }
 
   const db = await getDb();
   return db.collection('vehicles').findOne({ id });
 }
 
 export async function getAlertsFromDb(vehicleId?: string | null, limit = 10) {
-  if (useLocalData()) return getLocalAlerts(vehicleId ?? undefined, limit);
+  if (useLocalData()) {
+    const { getLocalAlerts } = await import('@/lib/local-data');
+    return getLocalAlerts(vehicleId ?? undefined, limit);
+  }
 
   const db = await getDb();
   const query = vehicleId ? { vehicleId } : {};
@@ -42,14 +44,20 @@ export async function getAlertsFromDb(vehicleId?: string | null, limit = 10) {
 }
 
 export async function getRouteFromDb(vehicleId: string, date: string) {
-  if (useLocalData()) return getLocalRoute(vehicleId, date);
+  if (useLocalData()) {
+    const { getLocalRoute } = await import('@/lib/local-data');
+    return getLocalRoute(vehicleId, date);
+  }
 
   const db = await getDb();
   return db.collection('routes').findOne({ vehicleId, date });
 }
 
 export async function getRouteDatesFromDb(vehicleId: string): Promise<string[]> {
-  if (useLocalData()) return getLocalRouteDates(vehicleId);
+  if (useLocalData()) {
+    const { getLocalRouteDates } = await import('@/lib/local-data');
+    return getLocalRouteDates(vehicleId);
+  }
 
   const db = await getDb();
   const routes = await db
