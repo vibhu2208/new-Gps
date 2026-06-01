@@ -281,7 +281,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up [animation-delay:0.8s]">
               <button className="group px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl text-lg font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all transform hover:scale-105">
                 <span className="flex items-center gap-2">
-                  Start Free Demo
+                  Sign In
                   <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 </span>
               </button>
@@ -1236,7 +1236,7 @@ export default function LandingPage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <button className="group px-10 py-5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl text-lg font-semibold shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all transform hover:scale-105">
                   <span className="flex items-center gap-2">
-                    Start Free Demo
+                    Sign In
                     <Zap className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                   </span>
                 </button>

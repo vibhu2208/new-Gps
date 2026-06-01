@@ -25,6 +25,10 @@ const CONFIG = {
   POINTS_PER_DAY: 24 * 60,
   VEHICLE_INDEX: null,
   OUTPUT_CSV: path.join(__dirname, '../data/local-road/VEHICLE-01.csv'),
+  BREAKS: [
+    { startHour: 8, startMinute: 0, durationMinutes: 30 },
+    { startHour: 20, startMinute: 0, durationMinutes: 30 },
+  ],
 };
 
 function loadFleetConfig() {
@@ -50,6 +54,36 @@ function applyFleetVehicle(fleet, vehicleIndex) {
   if (fleet.endDate) CONFIG.END_DATE = new Date(fleet.endDate);
   if (fleet.radiusMeters) CONFIG.RADIUS_METERS = fleet.radiusMeters;
   if (fleet.pointsPerDay) CONFIG.POINTS_PER_DAY = fleet.pointsPerDay;
+  if (fleet.breaks?.length) CONFIG.BREAKS = fleet.breaks;
+}
+
+function minuteOfDay(hour, minute) {
+  return hour * 60 + minute;
+}
+
+function getBreakWindow(breaks) {
+  return breaks.map((b) => ({
+    start: b.startHour * 60 + (b.startMinute || 0),
+    end: b.startHour * 60 + (b.startMinute || 0) + b.durationMinutes,
+  }));
+}
+
+function getBreakAnchorIndex(breakStartMinute) {
+  return Math.max(0, breakStartMinute - 1);
+}
+
+function resolvePhaseAndPosition(i, pointTime, allWorkPoints, center, breakWindows) {
+  const mins = minuteOfDay(pointTime.getHours(), pointTime.getMinutes());
+  const workPt = allWorkPoints[i] ?? center;
+
+  for (const window of breakWindows) {
+    if (mins >= window.start && mins < window.end) {
+      const anchor = allWorkPoints[getBreakAnchorIndex(window.start)] ?? workPt;
+      return { phase: 'BREAK', lat: anchor.lat, lng: anchor.lng };
+    }
+  }
+
+  return { phase: 'WORKING', lat: workPt.lat, lng: workPt.lng };
 }
 
 function parseArgs() {
@@ -199,6 +233,7 @@ function generateDayData(date, dayOffset = 0) {
   const rows = [];
   const center = CONFIG.CENTER;
   const pointsPerDay = CONFIG.POINTS_PER_DAY;
+  const breakWindows = getBreakWindow(CONFIG.BREAKS);
 
   const dayStart = new Date(date);
   dayStart.setHours(0, 0, 0, 0);
@@ -213,16 +248,22 @@ function generateDayData(date, dayOffset = 0) {
   for (let i = 0; i < pointsPerDay; i++) {
     const pointTime = new Date(dayStart);
     pointTime.setMinutes(pointTime.getMinutes() + i);
-    const pt = allWorkPoints[i] ?? center;
+    const { phase, lat, lng } = resolvePhaseAndPosition(
+      i,
+      pointTime,
+      allWorkPoints,
+      center,
+      breakWindows
+    );
 
     rows.push({
       timestamp: formatTimestamp(pointTime),
       vehicle: CONFIG.VEHICLE,
       ward: CONFIG.WARD,
-      phase: 'WORKING',
+      phase,
       location_name: CONFIG.LOCATION,
-      latitude: pt.lat,
-      longitude: pt.lng,
+      latitude: lat,
+      longitude: lng,
     });
   }
 
@@ -257,7 +298,10 @@ function main() {
   console.log(`  Center:  ${CONFIG.CENTER.lat}, ${CONFIG.CENTER.lng}`);
   console.log(`  Radius:  ${CONFIG.RADIUS_METERS} m (irregular random walk, small area)`);
   console.log(`  Dates:   ${CONFIG.START_DATE.toISOString().split('T')[0]} → ${CONFIG.END_DATE.toISOString().split('T')[0]}`);
-  console.log(`  Schedule: 24/7 (${CONFIG.POINTS_PER_DAY} points/day)`);
+  const breakDesc = CONFIG.BREAKS.map(
+    (b) => `${String(b.startHour).padStart(2, '0')}:${String(b.startMinute || 0).padStart(2, '0')} (${b.durationMinutes} min)`
+  ).join(', ');
+  console.log(`  Schedule: ${CONFIG.POINTS_PER_DAY} points/day, breaks at ${breakDesc}`);
 
   const allRows = [];
   let dayCount = 0;

@@ -4,25 +4,18 @@
     "email": "vipinkundu@fleetzi.in",
     "password": "VIPIN@123",
     "name": "Vipin kundu",
-    "role": "admin"
-  },
-  {
-    "id": "2",
-    "email": "testuser@fleetzi.in",
-    "password": "Test@123",
-    "name": "Test User",
-    "role": "user",
+    "role": "admin",
     "phone": "+91-9876543210",
     "timezone": "Asia/Kolkata",
     "language": "en"
   },
   {
-    "id": "3",
-    "email": "demo@fleetzi.in",
-    "password": "Demo@2026",
-    "name": "Demo User",
-    "role": "user",
-    "phone": "+91-9000000003",
+    "id": "2",
+    "email": "BLUE123",
+    "password": "Amit@123",
+    "name": "BLUE123",
+    "role": "admin",
+    "phone": "+91-9876543210",
     "timezone": "Asia/Kolkata",
     "language": "en"
   }

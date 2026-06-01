@@ -199,8 +199,8 @@ function main() {
   }
 
   saveToMongoDB(mergedRoutes).catch((error) => {
-    console.error('\n❌ MongoDB import failed:', error.message);
-    process.exit(1);
+    console.error('\n⚠️  MongoDB import skipped:', error.message);
+    console.error('   Run locally when online: node scripts/convert-local-road-to-routes.js');
   });
 }
 

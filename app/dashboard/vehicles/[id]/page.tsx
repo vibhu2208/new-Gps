@@ -161,13 +161,6 @@ export default function VehicleDetailPage() {
             <span>{vehicle.driver}</span>
           </p>
         </div>
-        <div className={`px-4 py-2 rounded-xl font-semibold text-sm ${
-          vehicle.status === 'moving' ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white' :
-          vehicle.status === 'idle' ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white' :
-          'bg-gradient-to-r from-gray-500 to-slate-600 text-white'
-        }`}>
-          {vehicle.status.toUpperCase()}
-        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

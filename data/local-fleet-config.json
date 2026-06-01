@@ -3,6 +3,10 @@
   "endDate": "2026-05-31",
   "radiusMeters": 50,
   "pointsPerDay": 1440,
+  "breaks": [
+    { "startHour": 8, "startMinute": 0, "durationMinutes": 30 },
+    { "startHour": 20, "startMinute": 0, "durationMinutes": 30 }
+  ],
   "vehicles": [
     {
       "index": 1,

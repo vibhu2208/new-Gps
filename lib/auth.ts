@@ -1,9 +1,14 @@
 import { User } from '@/types';
 import usersData from '@/data/users.json';
 
-export const validateCredentials = (email: string, password: string): User | null => {
+export const validateCredentials = (emailOrUsername: string, password: string): User | null => {
+  const login = emailOrUsername.trim();
   const user = usersData.find(
-    (u) => u.email === email && u.password === password
+    (u) =>
+      u.password === password &&
+      (u.email === login ||
+        u.email.toLowerCase() === login.toLowerCase() ||
+        ('username' in u && (u as User & { username?: string }).username === login))
   );
   
   if (user) {
