@@ -1,0 +1,28 @@
+# Push vehicles + GPS routes to MongoDB so the live (Vercel) dashboard works.
+# Setup: GitHub repo → Settings → Secrets and variables → Actions
+#   - MONGODB_URI (required)
+#   - MONGODB_DB_NAME (optional, default gps_tracker)
+name: Sync fleet to MongoDB
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Push vehicles and routes
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_DB_NAME: ${{ secrets.MONGODB_DB_NAME || 'gps_tracker' }}
+        run: node scripts/push-fleet-to-mongodb.js

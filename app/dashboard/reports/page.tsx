@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getVehicles, getRouteData, getAlerts, getAllVehicleData, exportToCSV, getAvailableDates } from '@/lib/data';
+import { formatExportLocation } from '@/lib/site';
 import { Download, FileText, Car } from 'lucide-react';
 import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from 'date-fns';
 import { Vehicle } from '@/types';
@@ -82,7 +83,7 @@ export default function ReportsPage() {
           Timestamp: format(pointDate, 'yyyy-MM-dd HH:mm:ss'),
           Latitude: point.lat,
           Longitude: point.lng,
-          Location: point.location || 'Unknown Location',
+          Location: formatExportLocation(point.location, vehicle?.city),
         };
       });
 
@@ -102,7 +103,7 @@ export default function ReportsPage() {
             Vehicle: vehicle.name,
             PlateNumber: vehicle.plateNumber,
             Driver: vehicle.driver,
-            City: vehicle.city,
+            City: formatExportLocation(undefined, vehicle.city),
             Status: vehicle.status,
             TotalDistance: routeData?.summary.totalDistance || 0,
             DrivingDuration: routeData?.summary.drivingDuration || 0,

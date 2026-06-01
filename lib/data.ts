@@ -1,4 +1,5 @@
 import { Vehicle, RouteData, Alert } from '@/types';
+import { formatExportLocation } from '@/lib/site';
 
 export type FetchResult<T> = { data: T; error?: string };
 
@@ -135,12 +136,12 @@ export const getAllVehicleData = async (vehicleId: string): Promise<any[]> => {
             Vehicle: vehicle?.name || vehicleId,
             PlateNumber: vehicle?.plateNumber || vehicleId,
             Ward: vehicle?.ward || 'Unknown',
-            City: vehicle?.city || 'Unknown',
+            City: formatExportLocation(undefined, vehicle?.city),
             Date: date,
             Timestamp: new Date(point.timestamp).toLocaleString(),
             Latitude: point.lat,
             Longitude: point.lng,
-            Location: point.location || 'Unknown Location',
+            Location: formatExportLocation(point.location, vehicle?.city),
             Status: point.status || 'Unknown'
           });
         });

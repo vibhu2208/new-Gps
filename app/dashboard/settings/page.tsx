@@ -596,7 +596,7 @@ function BillingTab() {
     <div className="space-y-6 max-w-2xl">
       <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
         <h3 className="text-xl font-semibold mb-2">Current Plan: Fleet Management</h3>
-        <p className="text-blue-100">Gurgaon Faridabad Solid Waste Facility</p>
+        <p className="text-blue-100">Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility</p>
       </div>
 
       <div>

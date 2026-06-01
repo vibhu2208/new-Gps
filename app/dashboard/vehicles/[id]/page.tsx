@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getVehicleById, getRouteData, getAlertsByVehicle, getAvailableDates, exportToCSV } from '@/lib/data';
+import { formatExportLocation, SITE_DISPLAY_NAME } from '@/lib/site';
 import { RouteData } from '@/types';
 import EnhancedMap from '@/components/EnhancedMap';
 import AlertCard from '@/components/AlertCard';
@@ -128,7 +129,7 @@ export default function VehicleDetailPage() {
       Time: format(new Date(point.timestamp), 'HH:mm:ss'),
       Latitude: point.lat.toFixed(6),
       Longitude: point.lng.toFixed(6),
-      Location: point.location || 'Unknown Location'
+      Location: formatExportLocation(point.location, vehicle.city)
     }));
 
     exportToCSV(exportData, `route-history-${vehicle.plateNumber}-${selectedDate}.csv`);
@@ -256,7 +257,7 @@ export default function VehicleDetailPage() {
                         <div>
                           <span className="text-gray-600 block mb-1">Location</span>
                           <span className="font-semibold text-blue-600 block">
-                            {vehicle.city || routeData.points[currentIndex].location || 'Unknown Location'}
+                            {SITE_DISPLAY_NAME}
                           </span>
                         </div>
                         <div>
@@ -392,7 +393,7 @@ export default function VehicleDetailPage() {
                           </div>
                           <div>
                             <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Site</p>
-                            <p className="text-sm font-bold text-gray-900 leading-snug">{vehicle.city}</p>
+                            <p className="text-sm font-bold text-gray-900 leading-snug">{SITE_DISPLAY_NAME}</p>
                           </div>
                         </div>
                       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { Vehicle } from '@/types';
+import { SITE_DISPLAY_NAME } from '@/lib/site';
 import { Truck, MapPin, ArrowRight } from 'lucide-react';
 
 interface VehicleCardProps {
@@ -36,7 +37,7 @@ export default function VehicleCard({ vehicle, onClick }: VehicleCardProps) {
             <span className="text-gray-600 font-medium shrink-0">Site</span>
             <span className="font-bold text-gray-900 flex items-start gap-1 text-right leading-snug">
               <MapPin className="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" />
-              {vehicle.city}
+              {SITE_DISPLAY_NAME}
             </span>
           </div>
         </div>

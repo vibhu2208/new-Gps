@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { RoutePoint } from '@/types';
+import { SITE_DISPLAY_NAME } from '@/lib/site';
 import { Maximize, Minimize, Map as MapIcon, Satellite } from 'lucide-react';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || 'pk.eyJ1IjoiZGVtby11c2VyIiwiYSI6ImNrOHVpZGZhZjBhMGczZW56YnRvbWJkdGEifQ.example';
@@ -17,9 +18,8 @@ interface EnhancedMapProps {
   siteName?: string;
 }
 
-function resolveLocationName(point: RoutePoint, siteName?: string) {
-  if (siteName) return siteName;
-  return point.location || 'Unknown Location';
+function resolveLocationName(_point: RoutePoint, siteName?: string) {
+  return siteName?.trim() || SITE_DISPLAY_NAME;
 }
 
 export default function EnhancedMap({ 

@@ -14,11 +14,11 @@
       "name": "Dozer 1",
       "plateNumber": "HR58E4453",
       "ward": "10",
-      "location": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "location": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "driver": "Operator 1",
       "model": "Dozer",
       "color": "Yellow",
-      "city": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "city": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "center": { "lat": 28.402999, "lng": 77.172291 }
     },
     {
@@ -27,11 +27,11 @@
       "name": "Dozer 2",
       "plateNumber": "RJ48GA2129",
       "ward": "10",
-      "location": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "location": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "driver": "Operator 2",
       "model": "Dozer",
       "color": "Yellow",
-      "city": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "city": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "center": { "lat": 28.402600, "lng": 77.170698}
     },
     {
@@ -40,11 +40,11 @@
       "name": "JCB 1",
       "plateNumber": "UP16RT1710",
       "ward": "10",
-      "location": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "location": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "driver": "Operator 3",
       "model": "JCB",
       "color": "Yellow",
-      "city": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "city": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "center": { "lat": 28.401827, "lng": 77.171576 }
     },
     {
@@ -53,11 +53,11 @@
       "name": "Excavator 1",
       "plateNumber": "84295200",
       "ward": "10",
-      "location": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "location": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "driver": "Operator 4",
       "model": "Excavator",
       "color": "Yellow",
-      "city": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "city": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "center": { "lat": 28.402764, "lng": 77.171068 }
     },
     {
@@ -66,11 +66,11 @@
       "name": "Excavator 2",
       "plateNumber": "0060103",
       "ward": "10",
-      "location": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "location": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "driver": "Operator 5",
       "model": "Excavator",
       "color": "Yellow",
-      "city": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "city": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "center": { "lat": 28.402515, "lng": 77.172308 }
     },
     {
@@ -79,11 +79,11 @@
       "name": "Excavator 3",
       "plateNumber": "3514890",
       "ward": "10",
-      "location": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "location": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "driver": "Operator 6",
       "model": "Excavator",
       "color": "Yellow",
-      "city": "Gurgaon Faridabad Combined Solid Waste Management Facility",
+      "city": "Bandhwari Gurgaon Faridabad Combined Solid Waste Management Facility",
       "center": { "lat": 28.402973, "lng": 77.171200 }
     }
   ]
